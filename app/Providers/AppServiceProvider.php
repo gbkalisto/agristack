@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\AdminSetting;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,7 +31,12 @@ class AppServiceProvider extends ServiceProvider
             }
         });
         // Share site settings with all views
-        $settings = AdminSetting::pluck('value', 'key')->toArray();
-        View::share('settings', $settings);
+        // $settings = AdminSetting::pluck('value', 'key')->toArray();
+        // View::share('settings', $settings);
+        // Load settings only if table exists
+        if (Schema::hasTable('admin_settings')) {
+            $settings = AdminSetting::pluck('value', 'key')->toArray();
+            View::share('settings', $settings);
+        }
     }
 }
