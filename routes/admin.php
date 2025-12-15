@@ -50,7 +50,7 @@ Route::middleware('auth:admin')->group(function () {
 
     Route::post('divisions/import', [DivisionController::class, 'import'])->name('divisions.import');
     Route::post('districts/import', [DistrictController::class, 'import'])->name('districts.import');
-
+    Route::post('blocks/import', [BlockController::class, 'import'])->name('blocks.import');
     // Move closure → controller method
     Route::get(
         'blocksby/{districtId}',

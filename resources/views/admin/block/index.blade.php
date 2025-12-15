@@ -23,7 +23,13 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <!-- Add User Button -->
+                        <!-- LEFT: Action Buttons -->
+                        <div class="d-flex gap-2">
                             <a href="{{ route('admin.blocks.create') }}" class="btn btn-primary">Add Blocks</a>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                Import Block
+                            </button>
+                        </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
                             <input type="search" name="search" class="form-control" placeholder="Search blocks..."
@@ -34,6 +40,9 @@
 
 
                     </div>
+
+
+
                     <div class="card-body">
                         <table class="table mb-0 table-striped">
                             <thead>
@@ -80,5 +89,34 @@
             </div>
         </div>
         <!--end row-->
+    </div>
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Import Blocks</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="{{ route('admin.districts.import') }}" enctype="multipart/form-data">
+                    @csrf
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="from-control">
+                            {{-- <label for="">Import Division</label> --}}
+                            <input type="file" name="file" class="form-control" required accept=".xlsx,.xls,.csv">
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
 @endsection

@@ -8,6 +8,8 @@ use App\Models\Block;
 use App\Models\District;
 use App\Models\Division;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\BlockImport;
 
 class BlockController extends Controller
 {
@@ -172,5 +174,21 @@ class BlockController extends Controller
         return Block::where('district_id', $districtId)
             ->orderBy('name')
             ->get();
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        $file = $request->file('file');
+
+        try {
+            Excel::import(new \App\Imports\BlockImport, $file);
+            return redirect()->route('admin.blocks.index')->with('success', 'Blocks imported successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.blocks.index')->with('error', 'Error importing blocks: ' . $e->getMessage());
+        }
     }
 }

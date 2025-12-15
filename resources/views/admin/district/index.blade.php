@@ -23,10 +23,12 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <!-- Add User Button -->
-                        <a href="{{ route('admin.districts.create') }}" class="btn btn-primary">Add District</a>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                            Import District
-                        </button>
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('admin.districts.create') }}" class="btn btn-primary">Add District</a>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+                                Import District
+                            </button>
+                        </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
                             <input type="search" name="search" class="form-control" placeholder="Search districts..."
