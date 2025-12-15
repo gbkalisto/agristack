@@ -112,13 +112,13 @@
                                           </ul>
                                       </li>
                                       {{-- @endif --}}
-                                      <li>
+                                      {{-- <li>
                                           <a href="{{ route('admin.logout') }}">
                                               <div class="parent-icon"><i class="bx bx-log-out-circle"></i>
                                               </div>
                                               <div class="menu-title">Logout</div>
                                           </a>
-                                      </li>
+                                      </li> --}}
 
 
 
