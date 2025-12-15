@@ -11,6 +11,7 @@ class Block extends Model
     protected $fillable = [
         'name',
         'district_id',
+        'status',
     ];
 
     /**

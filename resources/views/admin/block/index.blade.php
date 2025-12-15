@@ -57,8 +57,8 @@
                                 @foreach ($blocks as $block)
                                     <tr>
                                         <th scope="row"> {{ $block->id }} </th>
-                                        <td>{{ $block->district->name }}</td>
-                                        <td>{{ $block->name }}</td>
+                                        <td>{{ ucfirst($block->district->name) }}</td>
+                                        <td>{{ ucfirst($block->name) }}</td>
                                         <td>
                                             <a href="{{ route('admin.blocks.edit', $block->id) }}"
                                                 class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>
@@ -100,7 +100,7 @@
                     <h4 class="modal-title">Import Blocks</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form method="POST" action="{{ route('admin.districts.import') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('admin.blocks.import') }}" enctype="multipart/form-data">
                     @csrf
                     <!-- Modal body -->
                     <div class="modal-body">

@@ -43,7 +43,7 @@ class DivisionController extends Controller
             'name' => 'required|unique:divisions,name'
         ]);
 
-        $division = Division::create(['name' => $request->name]);
+        $division = Division::create(['name' => strtolower($request->name)]);
 
         return redirect()->route('admin.divisions.index')->with('success', 'Division created successfully.');
     }

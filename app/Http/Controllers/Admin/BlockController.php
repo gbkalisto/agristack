@@ -76,7 +76,7 @@ class BlockController extends Controller
         // Store in DB
         Block::create([
             'district_id' => $request->district_id,
-            'name'        => $request->name,
+            'name'        => strtolower($request->name),
         ]);
 
         return redirect()
@@ -147,7 +147,7 @@ class BlockController extends Controller
         // update
         $block->update([
             'district_id' => $request->district_id,
-            'name'        => $request->name,
+            'name'        => strtolower($request->name),
         ]);
 
         return redirect()

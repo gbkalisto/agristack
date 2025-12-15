@@ -73,7 +73,7 @@ class DistrictController extends Controller
         // Create District
         District::create([
             'division_id' => $request->division_id,
-            'name'        => $request->name,
+            'name'        => strtolower($request->name),
         ]);
 
         return redirect()->route('admin.districts.index')->with('success', 'District created successfully.');
@@ -117,7 +117,7 @@ class DistrictController extends Controller
 
         // perform update
         $division->update([
-            'name' => $request->input('name'),
+            'name' => strtolower($request->input('name')),
         ]);
 
         // redirect with success message
