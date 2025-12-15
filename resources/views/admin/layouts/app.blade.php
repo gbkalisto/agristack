@@ -103,7 +103,7 @@
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.iframe-transport.js"></script>
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.fancy-fileupload.js"></script>
     <script>
-        new PerfectScrollbar(".app-container")
+        // new PerfectScrollbar(".app-container")
     </script>
 </body>
 

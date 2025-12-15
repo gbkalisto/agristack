@@ -44,13 +44,9 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-        'admin_users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\AdminUser::class,
-        ],
-        'tenant' => [
-            'driver' => 'session',
-            'provider' => 'tenants',
+        'account' => [
+            'driver' => 'session',   // ✅ FIXED
+            'provider' => 'accounts',
         ],
     ],
 
@@ -81,10 +77,10 @@ return [
             'model' => env('AUTH_ADMIN_MODEL', App\Models\Admin::class),
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'accounts' => [ // ✅ CORRECT KEY
+            'driver' => 'eloquent',  // ✅ eloquent belongs here
+            'model' => App\Models\AdminUser::class,
+        ],
     ],
 
     /*

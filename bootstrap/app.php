@@ -16,10 +16,16 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::prefix('api')
                 ->middleware('api')
                 ->group(base_path('routes/api.php'));
+            // ✅ Super admin routes (NEW)
             Route::middleware('web')
                 ->prefix('admin')
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
+            // ✅ Account routes (NEW)
+            Route::middleware('web')
+                ->prefix('account')
+                ->name('account.')
+                ->group(base_path('routes/account.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {

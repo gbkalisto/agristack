@@ -9,12 +9,12 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <p class="mb-0 text-secondary">Total Orders</p>
-                                <h4 class="my-1 text-info">4805</h4>
+                                <p class="mb-0 text-secondary">Farmers</p>
+                                <h4 class="my-1 text-info">{{ $accounts }}</h4>
                                 <p class="mb-0 font-13">+2.5% from last week</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i
-                                    class='bx bxs-cart'></i>
+                                    class='bx bxs-user'></i>
                             </div>
                         </div>
                     </div>
@@ -22,27 +22,30 @@
             </div>
             <div class="col">
                 <div class="card radius-10 border-start border-0 border-4 border-danger">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <p class="mb-0 text-secondary">Total Revenue</p>
-                                <h4 class="my-1 text-danger">$84,245</h4>
-                                <p class="mb-0 font-13">+5.4% from last week</p>
+                    <a href="{{ route('admin.accounts.index') }}">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="mb-0 text-secondary">Total Accounts</p>
+                                    <h4 class="my-1 text-danger">{{ $accounts }}</h4>
+                                    <p class="mb-0 font-13">+5.4% from last week</p>
+                                </div>
+                                <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto">
+                                    <i class='bx bxs-card'></i>
+                                </div>
                             </div>
-                            <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto">
-                                <i class='bx bxs-wallet'></i>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-success">
+        </div>
+        <div class="col">
+            <div class="card radius-10 border-start border-0 border-4 border-success">
+                <a href="{{ route('admin.accounts.create') }}">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <p class="mb-0 text-secondary">Bounce Rate</p>
-                                <h4 class="my-1 text-success">34.6%</h4>
+                                <p class="mb-0 text-secondary">Add Account</p>
+                                <h4 class="my-1 text-success">+</h4>
                                 <p class="mb-0 font-13">-4.5% from last week</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
@@ -50,15 +53,17 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
-            <div class="col">
-                <div class="card radius-10 border-start border-0 border-4 border-warning">
+        </div>
+        <div class="col">
+            <div class="card radius-10 border-start border-0 border-4 border-warning">
+                <a href="{{ route('admin.divisions.index') }}">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
-                                <p class="mb-0 text-secondary">Total Customers</p>
-                                <h4 class="my-1 text-warning">8.4K</h4>
+                                <p class="mb-0 text-secondary">Total Divisions</p>
+                                <h4 class="my-1 text-warning">{{ $divisions }}</h4>
                                 <p class="mb-0 font-13">+8.4% from last week</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-orange text-white ms-auto">
@@ -66,8 +71,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
-        </div><!--end row-->
+        </div>
+    </div><!--end row-->
     </div>
 @endsection

@@ -97,7 +97,7 @@
                                                       <i class="bx bx-radio-circle"></i>Districts
                                                   </a>
                                               </li>
-                                                <li>
+                                              <li>
                                                   <a href="{{ route('admin.blocks.index') }}">
                                                       <i class="bx bx-radio-circle"></i>Blocks
                                                   </a>
@@ -109,24 +109,16 @@
                                               </li>
                                               {{-- @endcan --}}
 
-                                              {{-- @can('view roles') --}}
-                                              {{-- <li>
-                                                  <a href="{{ route('admin.roles.index') }}">
-                                                      <i class="bx bx-radio-circle"></i>Roles
-                                                  </a>
-                                              </li> --}}
-                                              {{-- @endcan --}}
-
-                                              {{-- @can('view permissions') --}}
-                                              {{-- <li>
-                                                  <a href="{{ route('admin.permissions.index') }}">
-                                                      <i class="bx bx-radio-circle"></i>Permissions
-                                                  </a>
-                                              </li> --}}
-                                              {{-- @endcan --}}
                                           </ul>
                                       </li>
                                       {{-- @endif --}}
+                                      <li>
+                                          <a href="{{ route('admin.logout') }}">
+                                              <div class="parent-icon"><i class="bx bx-log-out-circle"></i>
+                                              </div>
+                                              <div class="menu-title">Logout</div>
+                                          </a>
+                                      </li>
 
 
 

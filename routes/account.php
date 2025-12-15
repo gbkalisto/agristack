@@ -1,0 +1,17 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Account\AuthController;
+use App\Http\Controllers\Account\DashboardController;
+
+// Guest (not logged in)
+Route::middleware('guest:account')->group(function () {
+    Route::get('login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login.submit');
+});
+
+// Authenticated
+Route::middleware('auth:account')->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+});
