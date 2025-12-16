@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Adminuser;
+use App\Models\AdminUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -64,7 +64,7 @@ class AuthController extends Controller
         }
 
         /* ---------------- CHECK USER ---------------- */
-        $user = Adminuser::where('email', $request->email)
+        $user = AdminUser::where('email', $request->email)
             ->orWhere('user_name', $request->email)
             ->where('status', 1)
             ->first();
