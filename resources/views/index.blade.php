@@ -179,7 +179,7 @@
                             <div id="farmerBtn" class="role-btn" onclick="setRole('farmer')">Farmer</div>
                         </div>
                     </div>
-                    <form action="{{ route('login') }}" method="POST" novalidate>
+                    <form action="{{ route('account.login.submit') }}" method="POST" novalidate>
                         @csrf
 
                         {{-- USERNAME / EMAIL --}}
