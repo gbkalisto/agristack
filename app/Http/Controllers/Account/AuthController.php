@@ -16,6 +16,11 @@ class AuthController extends Controller
         return view('account.auth.login');
     }
 
+    public function otpForm()
+    {
+        return view('account.auth.otp');
+    }
+
     // public function login(Request $request)
     // {
     //     $request->validate([
@@ -80,7 +85,7 @@ class AuthController extends Controller
 
         /* ---------------- SEND OTP (SMS API) ---------------- */
         // Example
-       // $this->sendOtpSms($user->mobile, $otp);
+        // $this->sendOtpSms($user->mobile, $otp);
 
         /* ---------------- STORE TEMP SESSION ---------------- */
         // session([
@@ -89,6 +94,44 @@ class AuthController extends Controller
 
         return redirect()->route('account.otp.form');
     }
+
+    // otp verification and login
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|digits:6',
+        ]);
+
+        $user = AdminUser::find(session('otp_account_id'));
+
+        if (! $user) {
+            return redirect()->route('login')->withErrors([
+                'otp' => 'Session expired'
+            ]);
+        }
+
+        if (now()->gt($user->otp_expires_at)) {
+            return back()->withErrors(['otp' => 'OTP expired']);
+        }
+
+        if (! Hash::check($request->otp, $user->otp)) {
+            return back()->withErrors(['otp' => 'Invalid OTP']);
+        }
+
+        /* ---------------- SUCCESS ---------------- */
+        $user->update([
+            'otp' => null,
+            'otp_verified' => true,
+            'otp_expires_at' => null,
+        ]);
+
+        Auth::guard('account')->login($user);
+        session()->forget('otp_account_id');
+
+        // return redirect()->route('account.dashboard');
+        return 'Verified Successfully';
+    }
+
 
     public function logout()
     {
