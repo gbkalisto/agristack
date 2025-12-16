@@ -11,10 +11,10 @@ Route::middleware('guest:account')->group(function () {
 });
 
 Route::get('otp', [AuthController::class, 'otpForm'])
-    ->name('account.otp.form');
+    ->name('otp.form');
 
 Route::post('otp', [AuthController::class, 'verifyOtp'])
-    ->name('account.otp.verify');
+    ->name('otp.verify');
 // Authenticated
 Route::middleware('auth:account')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
