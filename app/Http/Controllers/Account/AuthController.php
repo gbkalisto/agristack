@@ -95,48 +95,113 @@ class AuthController extends Controller
         return redirect()->route('account.otp.form');
     }
 
+    // send otp on registed number
+    public function sendOtp(Request $request)
+    {
+        $request->validate([
+            'mobile' => 'required|string',
+        ]);
+
+        $user = AdminUser::where('mobile', $request->mobile)
+            ->where('status', 1)
+            ->first();
+
+        if (! $user) {
+            return back()->withErrors(['mobile' => 'Mobile number not found']);
+        }
+
+        /* ---------------- GENERATE OTP ---------------- */
+        // $otp = rand(100000, 999999);
+        $otp = 100000; // For testing purpose
+
+        $user->update([
+            'otp' => Hash::make($otp),
+            'otp_expires_at' => now()->addMinutes(5),
+            'otp_verified' => false,
+        ]);
+
+        /* ---------------- SEND OTP (SMS API) ---------------- */
+        //$this->sendOtpSms($user->mobile, $otp);
+
+        /* ---------------- STORE TEMP SESSION ---------------- */
+        session([
+            'otp_account_id' => $user->id
+        ]);
+
+        // return response in json
+        return response()->json(['status' => true, 'message' => 'OTP sent successfully']);
+    }
+
     // otp verification and login
     public function verifyOtp(Request $request)
     {
-        $request->validate([
-            'otp' => 'required|digits:6',
-        ]);
+        try {
+            $request->validate([
+                'otp' => 'required|digits:6',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => $e->errors()['otp'][0] ?? 'Invalid OTP'
+            ], 422);
+        }
 
-        $user = AdminUser::find(session('otp_account_id'));
+        $userId = session('otp_account_id');
+
+        if (! $userId) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Session expired. Please login again.'
+            ], 401);
+        }
+
+        $user = AdminUser::find($userId);
 
         if (! $user) {
-            return redirect()->route('login')->withErrors([
-                'otp' => 'Session expired'
-            ]);
+            return response()->json([
+                'status'  => false,
+                'message' => 'User not found.'
+            ], 404);
         }
 
         if (now()->gt($user->otp_expires_at)) {
-            return back()->withErrors(['otp' => 'OTP expired']);
+            return response()->json([
+                'status'  => false,
+                'message' => 'OTP expired.'
+            ], 422);
         }
 
         if (! Hash::check($request->otp, $user->otp)) {
-            return back()->withErrors(['otp' => 'Invalid OTP']);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Invalid OTP.'
+            ], 422);
         }
 
-        /* ---------------- SUCCESS ---------------- */
+        // ✅ SUCCESS
         $user->update([
-            'otp' => null,
-            'otp_verified' => true,
-            'otp_expires_at' => null,
+            'otp'             => null,
+            'otp_verified'    => true,
+            'otp_expires_at'  => null,
         ]);
 
         Auth::guard('account')->login($user);
         session()->forget('otp_account_id');
 
-        // return redirect()->route('account.dashboard');
-        return 'Verified Successfully';
+        return response()->json([
+            'status'   => true,
+            'message'  => 'Verified successfully',
+            'redirect' => route('account.dashboard'),
+        ]);
     }
+
 
 
     public function logout()
     {
         Auth::guard('account')->logout();
-        return redirect()->route('account.login');
+        // return redirect()->route('account.login');
+        return redirect()->to('/');
     }
 
     // Example function to send OTP via SMS API

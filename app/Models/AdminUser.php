@@ -20,11 +20,18 @@ class AdminUser extends Authenticatable
         'division_id',
         'district_id',
         'block_id',
+        'status',
+        'otp',
+        'otp_expires_at',
+        'otp_verified',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'otp',
+        'otp_expires_at',
+        'otp_verified',
     ];
 
     public function division()

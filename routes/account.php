@@ -10,11 +10,10 @@ Route::middleware('guest:account')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('login.submit');
 });
 
-Route::get('otp', [AuthController::class, 'otpForm'])
-    ->name('otp.form');
+Route::get('otp', [AuthController::class, 'otpForm'])->name('otp.form');
+Route::post('otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
+Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
 
-Route::post('otp', [AuthController::class, 'verifyOtp'])
-    ->name('otp.verify');
 // Authenticated
 Route::middleware('auth:account')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
