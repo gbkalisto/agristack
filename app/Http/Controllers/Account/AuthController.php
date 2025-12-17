@@ -44,7 +44,7 @@ class AuthController extends Controller
             return redirect()->route('account.otp.form');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials']);
+        return back()->withErrors(['username' => 'Invalid credentials']);
     }
 
 
