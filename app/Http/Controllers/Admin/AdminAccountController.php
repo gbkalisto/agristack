@@ -65,7 +65,7 @@ class AdminAccountController extends Controller
             'name'        => 'required|string|max:255',
             'user_name'   => 'required|string|unique:admin_users,user_name',
             'email'       => 'required|email|unique:admin_users,email',
-            'mobile'      => 'required|string',
+            'mobile'      => 'required|string|unique:admin_users,mobile',
             'password'    => 'required|min:6',
             'role'        => 'required|in:admin,division_admin,district_admin,block_admin',
 
@@ -134,7 +134,7 @@ class AdminAccountController extends Controller
             'name'     => 'required|string|max:255',
             'user_name' => 'required|unique:admin_users,user_name,' . $account->id,
             'email'    => 'required|email|unique:admin_users,email,' . $account->id,
-            'mobile'   => 'required|string',
+            'mobile'   => 'required|string|unique:admin_users,mobile,' . $account->id,
             'role'     => 'required|in:admin,division_admin,district_admin,block_admin',
             'password' => 'nullable|min:6',
 
