@@ -171,7 +171,7 @@
     <!-- ===== TOP NAV ===== -->
     <div class="top-nav">
         <img src="img/niclogo.png" alt="NIC Logo" class="nic-logo-img">
-        <a href="dashboard.php">Dashboard</a>
+        <a href="#">Dashboard</a>
         <a href="#">Check Enrollment Status</a>
         <a href="#">Login with CSC</a>
         <a href="#">Farmer Grievance</a>
