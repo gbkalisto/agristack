@@ -17,5 +17,5 @@ Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
 // Authenticated
 Route::middleware('auth:account')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::any('logout', [AuthController::class, 'logout'])->name('logout');
 });

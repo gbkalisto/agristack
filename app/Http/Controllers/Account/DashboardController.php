@@ -10,7 +10,6 @@ class DashboardController extends Controller
     public function index()
     {
         $account = Auth::guard('account')->user();
-
         return view('account.dashboard', compact('account'));
     }
 }

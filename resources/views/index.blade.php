@@ -13,7 +13,7 @@
         /* ===== COMMON THEME (You can change colors later) ===== */
         body {
             font-family: "Segoe UI", sans-serif;
-            background: linear-gradient(rgba(12, 90, 60, .85), rgba(12, 90, 60, .85)), url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6');
+            background: linear-gradient(rgba(12, 90, 60, .85), rgba(12, 90, 60, .85)), url('img/farmer.jpg');
             background-size: cover;
             background-position: center;
             min-height: 100vh;
@@ -44,6 +44,14 @@
             /* NIC ke baad space */
             display: inline-block;
         }
+
+        .nic-logo-img {
+            height: 45px;
+            width: auto;
+            margin-right: 30px;
+            vertical-align: middle;
+        }
+
 
         .login-card {
             background: #ffffff;
@@ -123,9 +131,19 @@
                 padding: 12px 20px;
             }
 
+            /* NIC LOGO */
+            .nic-logo-img {
+                height: 38px;
+                display: block;
+                margin: 0 auto 10px auto;
+                /* center + नीचे gap */
+            }
+
+            /* MENU LINKS – NIC LOGO KE NICHE */
             .top-nav a {
-                display: inline-block;
-                margin: 6px 8px;
+                display: block;
+                /* यही main change है */
+                margin: 6px 0;
                 font-size: 13px;
             }
 
@@ -150,7 +168,7 @@
 
     <!-- ===== TOP NAV ===== -->
     <div class="top-nav">
-        <strong class="nic-logo">NIC</strong>
+        <img src="img/niclogo.png" alt="NIC Logo" class="nic-logo-img">
         <a href="dashboard.php">Dashboard</a>
         <a href="#">Check Enrollment Status</a>
         <a href="#">Login with CSC</a>
@@ -162,68 +180,78 @@
 
             <!-- LEFT CONTENT -->
             <div class="col-lg-6 col-md-7 text-center text-md-start mb-4 mb-md-0 px-5">
-                <h1 class="fw-bold display-5">Agri Stack</h1>
+                <h1 class="fw-bold display-5"><img src="img/agristacklogo.png" alt="Logo"
+                        style="width:50%; height:50%; object-fit:contain;"></h1>
                 <h3 class="fw-semibold">Uttar Pradesh Farmer Registry</h3>
-                <p class="mt-3 w-75">Farmer Registry has been started as an important initiative for the farmers in the
-                    state of Uttar Pradesh. Under this system, a unique farmer ID (Farmer ID) will be created for each
-                    farmer.HELPDESK 0522 2317003</p>
+                <p class="mt-3 w-75">
+                    <center>Farmer Registry has been started as an important initiative for the farmers in the state of
+                        Uttar Pradesh. Under this system, a unique farmer ID (Farmer ID) will be created for each
+                        farmer.HELPDESK 0522 2317003</center>
+                </p>
             </div>
 
             <!-- RIGHT LOGIN CARD -->
             <div class="col-lg-4 col-md-5 d-flex justify-content-center">
                 <div class="login-card w-100">
-                    <div class="text-center mb-3">
-                        <strong class="fs-5">Log In as</strong><br>
-                        <div class="d-flex justify-content-center gap-2 mt-3">
-                            <div id="officialBtn" class="role-btn active" onclick="setRole('official')">Official</div>
-                            <div id="farmerBtn" class="role-btn" onclick="setRole('farmer')">Farmer</div>
-                        </div>
-                    </div>
-                    <form action="{{ route('account.login.submit') }}" method="POST" novalidate>
+                    <form method="POST" id="loginForm" novalidate>
                         @csrf
+                        <div class="text-center mb-3">
+                            <img src="img/uplogo.png" alt="Logo"
+                                style="width:120px; height:120px; object-fit:contain;">
+                        </div>
 
-                        {{-- USERNAME / EMAIL --}}
+                        <div class="text-center mb-3">
+                            <strong class="fs-5">Log In as</strong><br>
+                            <div class="d-flex justify-content-center gap-2 mt-3">
+                                <div id="officialBtn" class="role-btn active" onClick="setRole('official')">Official
+                                </div>
+                                <div id="farmerBtn" class="role-btn" onClick="setRole('farmer')">Farmer</div>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
-                            <input id="username" name="email" type="text"
-                                class="form-control @error('email') is-invalid @enderror"
-                                placeholder="Insert User ID / Email" value="{{ old('email') }}" required>
-                            @error('email')
+                            <input id="username" name="username" type="text"
+                                class="form-control  @error('username') is-invalid @enderror" required
+                                placeholder="Insert User ID / Email" value="{{ old('username') }}">
+                            @error('username')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
-                        {{-- PASSWORD --}}
                         <div class="mb-2">
-                            <input name="password" type="password"
-                                class="form-control @error('password') is-invalid @enderror"
+                            <input type="password" name="password" id="password"
+                                class="form-control  @error('password') is-invalid @enderror"
                                 placeholder="Enter password" required>
                             @error('password')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
-                        <a href="#" class="small text-success d-block mb-3">
-                            Forgot Password?
-                        </a>
+                        <a href="#" class="small text-success d-block mb-3">Forgot Password?</a>
 
-                        {{-- CAPTCHA --}}
                         <div class="mb-3">
-                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                            <label class="form-label text-muted">Captcha</label>
 
-                            @if ($errors->has('g-recaptcha-response'))
-                                <small class="text-danger">
-                                    {{ $errors->first('g-recaptcha-response') }}
-                                </small>
-                            @endif
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="{{ route('captcha') }}" id="captchaImage" height="45">
+
+                                <button type="button" class="btn btn-light" onclick="reloadCaptcha()">
+                                    &#x21bb;
+                                </button>
+                            </div>
+
+                            <input type="text" id="captcha" name="captcha"
+                                class="form-control  @error('captcha') is-invalid @enderror mt-2"
+                                placeholder="Enter Captcha" value="{{ old('captcha') }}" required>
+                            @error('captcha')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
-                        {{-- SUBMIT --}}
-                        <button type="submit" class="btn btn-main w-100 mt-2">
-                            Log In
-                        </button>
-
+                        <button class="btn btn-main w-100 mt-2" onClick="handleLogin()">Log In</button>
+                        <a href="" id="createBtn" class="btn create-btn w-100 mt-3 d-none">Create New User
+                            Account</a>
                     </form>
-
                 </div>
             </div>
 
@@ -232,8 +260,6 @@
 
     <!-- ===== JS ===== -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
     <script>
         function setRole(role) {
             const officialBtn = document.getElementById('officialBtn');
@@ -242,6 +268,7 @@
             const createBtn = document.getElementById('createBtn');
 
             if (role === 'official') {
+                $("#loginForm").attr("action", "{{ route('account.login') }}");
                 officialBtn.classList.add('active');
                 farmerBtn.classList.remove('active');
                 username.placeholder = 'Insert User ID / Email';
@@ -254,6 +281,55 @@
             }
         }
     </script>
+
+
+    <script>
+        let currentRole = 'official';
+        $("#loginForm").attr("action", "{{ route('account.login') }}");
+
+        function setRole(role) {
+            currentRole = role;
+
+            const officialBtn = document.getElementById('officialBtn');
+            const farmerBtn = document.getElementById('farmerBtn');
+            const username = document.getElementById('username');
+            const createBtn = document.getElementById('createBtn');
+
+            if (role === 'official') {
+                $("#loginForm").attr("action", "{{ route('account.login') }}");
+                officialBtn.classList.add('active');
+                farmerBtn.classList.remove('active');
+                username.placeholder = 'Insert User ID / Email';
+                createBtn.classList.add('d-none');
+            } else {
+                $("#loginForm").attr("action", "{{ route('login') }}");
+                farmerBtn.classList.add('active');
+                officialBtn.classList.remove('active');
+                username.placeholder = 'Insert Registered Mobile Number';
+                createBtn.classList.remove('d-none');
+            }
+        }
+
+        function handleLogin() {
+            if (currentRole === 'official') {
+                // ✅ Official → OTP page
+                window.location.href = 'officialotp.php';
+            } else {
+                // ✅ Farmer → direct page (abhi example)
+                window.location.href = 'farmerotp.php';
+                // baad me jo page bologe yahan change kar dena
+            }
+        }
+
+        function reloadCaptcha() {
+            document.getElementById('captchaImage').src =
+                "{{ route('captcha') }}?" + Date.now();
+        }
+    </script>
+
+
+
+
 
 
 

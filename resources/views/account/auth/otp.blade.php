@@ -14,7 +14,7 @@
         body {
             font-family: "Segoe UI", sans-serif;
             background: linear-gradient(rgba(12, 90, 60, .85), rgba(12, 90, 60, .85)),
-                url('img/farmer.jpg');
+                url({{ asset('img/farmer.jpg') }});
             background-size: cover;
             background-position: center;
             min-height: 100vh;
@@ -61,59 +61,14 @@
 </head>
 
 <body>
-
-    {{-- <div class="container-fluid">
-        <div class="row justify-content-center align-items-center min-vh-100">
-
-            <div class="col-md-4">
-                <div class="otp-card">
-
-                    <div class="text-center mb-3">
-                        <img src="img/uplogo.png" alt="Logo" style="width:120px; height:120px; object-fit:contain;">
-                    </div>
-
-                    <h5 class="text-center mb-4 fw-bold">
-                        Official Mobile OTP Verification
-                    </h5>
-
-
-                    <!-- Mobile Number -->
-                    <div class="mb-3">
-                        <label class="form-label text-muted">Mobile Number</label>
-                        <input type="text" name="mobile" class="form-control"
-                            placeholder="Enter registered mobile number">
-                        <button class="btn btn-outline-main" id="sendOtp">Get OTP</button>
-                    </div>
-
-
-                    <!-- OTP + Verify -->
-                    <div class="mb-4 d-flex gap-2">
-                        <input type="text" class="form-control" disabled placeholder="Enter OTP">
-                        <button class="btn btn-outline-main" disabled>Verify</button>
-                    </div>
-
-                    <!-- Login -->
-                    <button class="btn btn-main w-100" type="submit">
-                        Login
-                    </button>
-
-
-
-                </div>
-            </div>
-
-        </div>
-    </div> --}}
-
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
-
     <div class="container-fluid">
         <div class="row justify-content-center align-items-center min-vh-100">
             <div class="col-md-4">
                 <div class="otp-card">
 
                     <div class="text-center mb-3">
-                        <img src="{{ asset('img/uplogo.png') }}" alt="Logo" style="width:120px;height:120px;object-fit:contain;">
+                        <img src="{{ asset('img/uplogo.png') }}" alt="Logo"
+                            style="width:120px;height:120px;object-fit:contain;">
                     </div>
 
                     <h5 class="text-center mb-4 fw-bold">
@@ -126,7 +81,7 @@
                         <input type="text" name="mobile" id="mobile" class="form-control"
                             placeholder="Enter registered mobile number">
 
-                        <button class="btn btn-outline-main mt-2 w-100" id="sendOtp">
+                        <button class="btn btn-outline-main mt-2 w-10" id="sendOtp">
                             Get OTP
                         </button>
                     </div>
@@ -152,29 +107,6 @@
 
 
 </body>
-{{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
-<script>
-    document.getElementById('sendOtp').addEventListener('click', function(e) {
-        e.preventDefault();
-        const mobile = document.querySelector('input[name="mobile"]').value;
-        fetch('/account/send-otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                        'content')
-                },
-                body: JSON.stringify({
-                    mobile
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            });
-    });
-</script> --}}
-
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
@@ -249,7 +181,7 @@
                     document.getElementById('mobile').readOnly = true;
                     document.getElementById('otp').readOnly = true;
                     alert('OTP verified successfully. You can now login.');
-                }else{
+                } else {
                     alert(data.message);
                 }
             });

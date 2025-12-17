@@ -8,6 +8,8 @@ use App\Models\AdminUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -21,93 +23,55 @@ class AuthController extends Controller
         return view('account.auth.otp');
     }
 
-    // public function login(Request $request)
-    // {
-    //     $request->validate([
-    //         'email'    => 'required|email',
-    //         'password' => 'required',
-    //     ]);
-
-    //     if (Auth::guard('account')->attempt([
-    //         'email' => $request->email,
-    //         'password' => $request->password,
-    //         'status' => 1
-    //     ])) {
-    //         return redirect()->route('account.dashboard');
-    //     }
-
-    //     return back()->withErrors(['email' => 'Invalid credentials']);
-    // }
-
     public function login(Request $request)
     {
         $request->validate([
-            'email'                 => 'required|email',
-            'password'              => 'required',
-            'g-recaptcha-response'  => 'required',
+            'username'    => 'required',
+            'password' => 'required',
+            'captcha'    => 'required|string',
         ]);
 
-        /* ---------------- CAPTCHA VERIFY ---------------- */
-        $captcha = Http::asForm()->post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            [
-                'secret'   => config('services.recaptcha.secret_key'),
-                'response' => $request->input('g-recaptcha-response'),
-                'remoteip' => $request->ip(),
-            ]
-        );
-
-        if (! $captcha->json('success')) {
-            return back()->withErrors([
-                'captcha' => 'Captcha verification failed'
-            ]);
+        if ($request->captcha !== Session::get('captcha')) {
+            return back()->withErrors(['captcha' => 'Invalid Captcha']);
+        }
+        Session::forget('captcha');
+        $loginField = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'user_name';
+        if (Auth::guard('account')->attempt([
+            $loginField => $request->username,
+            'password' => $request->password,
+            'status' => 1
+        ])) {
+            return redirect()->route('account.otp.form');
         }
 
-        /* ---------------- CHECK USER ---------------- */
-        $user = AdminUser::where('email', $request->email)
-            ->orWhere('user_name', $request->email)
-            ->where('status', 1)
-            ->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['email' => 'Invalid credentials']);
-        }
-
-        /* ---------------- GENERATE OTP ---------------- */
-        // $otp = rand(100000, 999999);
-        // $otp = 000000; // For testing purpose
-
-        // $user->update([
-        //     'otp' => Hash::make($otp),
-        //     'otp_expires_at' => now()->addMinutes(5),
-        //     'otp_verified' => false,
-        // ]);
-
-        /* ---------------- SEND OTP (SMS API) ---------------- */
-        // Example
-        // $this->sendOtpSms($user->mobile, $otp);
-
-        /* ---------------- STORE TEMP SESSION ---------------- */
-        // session([
-        //     'otp_account_id' => $user->id
-        // ]);
-
-        return redirect()->route('account.otp.form');
+        return back()->withErrors(['email' => 'Invalid credentials']);
     }
+
+
 
     // send otp on registed number
     public function sendOtp(Request $request)
     {
-        $request->validate([
+        // 🔹 Manual validation to control JSON response
+        $validator = Validator::make($request->all(), [
             'mobile' => 'required|string',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
+        }
         $user = AdminUser::where('mobile', $request->mobile)
             ->where('status', 1)
             ->first();
 
         if (! $user) {
-            return back()->withErrors(['mobile' => 'Mobile number not found']);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Mobile number not found',
+            ], 404);
         }
 
         /* ---------------- GENERATE OTP ---------------- */
