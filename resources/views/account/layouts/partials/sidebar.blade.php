@@ -10,7 +10,7 @@
                         <div class="sidebar-header">
                             <div>
 
-                                <a href="{{ route('admin.dashboard') }}">
+                                <a href="{{ route('account.dashboard') }}">
                                     <img src="{{ asset('img/agristacklogo.png') }}" class="logo-icon" alt="logo icon"
                                         style="width:70%">
                                 </a>
@@ -31,7 +31,7 @@
                             </li>
 
                             <li>
-                                <a href="#">
+                                <a href="{{ route('account.profile') }}">
                                     <div class="parent-icon"><i class="bx bx-user-circle"></i>
                                     </div>
                                     <div class="menu-title">Profile</div>

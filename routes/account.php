@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\DashboardController;
+use App\Http\Controllers\Account\ProfileController;
 
 // Guest (not logged in)
 Route::middleware('guest:account')->group(function () {
@@ -18,4 +19,5 @@ Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
 Route::middleware('auth:account')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::any('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('profile', [ProfileController::class, 'showProfile'])->name('profile');
 });

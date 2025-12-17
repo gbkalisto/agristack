@@ -93,6 +93,28 @@
                                 </div>
                             </div>
 
+                            {{-- Email --}}
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">
+                                    Phone <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <span class="input-group-text @error('mobile') border-danger text-danger @enderror">
+                                            <i class="bx bx-phone"></i>
+                                        </span>
+                                        <input type="tel" name="mobile"
+                                            class="form-control @error('mobile') is-invalid @enderror" value="{{ old('mobile') }}"
+                                            pattern="[0-9]{10}"
+                                                    maxlength="10" placeholder="Enter 10-digit mobile number"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    </div>
+                                    @error('mobile')
+                                        <div class="text-danger mt-1"><small>{{ $message }}</small></div>
+                                    @enderror
+                                </div>
+                            </div>
+
                             {{-- Password --}}
                             <div class="row mb-3">
                                 <label class="col-sm-3 col-form-label">
@@ -271,124 +293,124 @@
 @endpush --}}
 
 @push('scripts')
-<script>
-$(document).ready(function () {
+    <script>
+        $(document).ready(function() {
 
-    // OLD VALUES FROM LARAVEL (important)
-    const oldRole     = "{{ old('role') }}";
-    const oldDivision = "{{ old('division_id') }}";
-    const oldDistrict = "{{ old('district_id') }}";
-    const oldBlock    = "{{ old('block_id') }}";
+            // OLD VALUES FROM LARAVEL (important)
+            const oldRole = "{{ old('role') }}";
+            const oldDivision = "{{ old('division_id') }}";
+            const oldDistrict = "{{ old('district_id') }}";
+            const oldBlock = "{{ old('block_id') }}";
 
-    function hideAll() {
-        $('.location').addClass('d-none');
-    }
+            function hideAll() {
+                $('.location').addClass('d-none');
+            }
 
-    function showByRole(role) {
-        hideAll();
+            function showByRole(role) {
+                hideAll();
 
-        if (role === 'division_admin') {
-            $('.division').removeClass('d-none');
-        }
+                if (role === 'division_admin') {
+                    $('.division').removeClass('d-none');
+                }
 
-        if (role === 'district_admin') {
-            $('.division, .district').removeClass('d-none');
-        }
+                if (role === 'district_admin') {
+                    $('.division, .district').removeClass('d-none');
+                }
 
-        if (role === 'block_admin') {
-            $('.division, .district, .block').removeClass('d-none');
-        }
-    }
+                if (role === 'block_admin') {
+                    $('.division, .district, .block').removeClass('d-none');
+                }
+            }
 
-    /* ------------------------------
-       PAGE LOAD HANDLING (ERROR SAFE)
-    --------------------------------*/
-    if (oldRole) {
-        // show correct fields
-        showByRole(oldRole);
+            /* ------------------------------
+               PAGE LOAD HANDLING (ERROR SAFE)
+            --------------------------------*/
+            if (oldRole) {
+                // show correct fields
+                showByRole(oldRole);
 
-        // set division
-        if (oldDivision) {
-            $('#division_id').val(oldDivision);
-            loadDistricts(oldDivision, oldDistrict);
-        }
+                // set division
+                if (oldDivision) {
+                    $('#division_id').val(oldDivision);
+                    loadDistricts(oldDivision, oldDistrict);
+                }
 
-        // set district
-        if (oldDistrict) {
-            loadBlocks(oldDistrict, oldBlock);
-        }
-    }
+                // set district
+                if (oldDistrict) {
+                    loadBlocks(oldDistrict, oldBlock);
+                }
+            }
 
-    /* ------------------------------
-       ROLE CHANGE
-    --------------------------------*/
-    $('#role').on('change', function () {
-        const role = $(this).val();
-        showByRole(role);
+            /* ------------------------------
+               ROLE CHANGE
+            --------------------------------*/
+            $('#role').on('change', function() {
+                const role = $(this).val();
+                showByRole(role);
 
-        // Reset only when role actually changes
-        $('#division_id').val('');
-        $('#district_id').html('');
-        $('#block_id').html('');
-    });
-
-    /* ------------------------------
-       DIVISION → DISTRICTS
-    --------------------------------*/
-    $('#division_id').on('change', function () {
-        const divisionId = $(this).val();
-        $('#district_id').html('<option value="">Loading...</option>');
-        $('#block_id').html('');
-
-        if (!divisionId) {
-            $('#district_id').html('<option value="">-- Select District --</option>');
-            return;
-        }
-
-        loadDistricts(divisionId);
-    });
-
-    /* ------------------------------
-       DISTRICT → BLOCKS
-    --------------------------------*/
-    $('#district_id').on('change', function () {
-        const districtId = $(this).val();
-        $('#block_id').html('<option value="">Loading...</option>');
-
-        if (!districtId) {
-            $('#block_id').html('<option value="">-- Select Block --</option>');
-            return;
-        }
-
-        loadBlocks(districtId);
-    });
-
-    /* ------------------------------
-       AJAX HELPERS
-    --------------------------------*/
-    function loadDistricts(divisionId, selectedDistrict = null) {
-        $.get(`/admin/districtsby/${divisionId}`, function (data) {
-            let options = '<option value="">-- Select District --</option>';
-            data.forEach(function (district) {
-                const selected = selectedDistrict == district.id ? 'selected' : '';
-                options += `<option value="${district.id}" ${selected}>${district.name}</option>`;
+                // Reset only when role actually changes
+                $('#division_id').val('');
+                $('#district_id').html('');
+                $('#block_id').html('');
             });
-            $('#district_id').html(options);
-        });
-    }
 
-    function loadBlocks(districtId, selectedBlock = null) {
-        $.get(`/admin/blocksby/${districtId}`, function (data) {
-            let options = '<option value="">-- Select Block --</option>';
-            data.forEach(function (block) {
-                const selected = selectedBlock == block.id ? 'selected' : '';
-                options += `<option value="${block.id}" ${selected}>${block.name}</option>`;
+            /* ------------------------------
+               DIVISION → DISTRICTS
+            --------------------------------*/
+            $('#division_id').on('change', function() {
+                const divisionId = $(this).val();
+                $('#district_id').html('<option value="">Loading...</option>');
+                $('#block_id').html('');
+
+                if (!divisionId) {
+                    $('#district_id').html('<option value="">-- Select District --</option>');
+                    return;
+                }
+
+                loadDistricts(divisionId);
             });
-            $('#block_id').html(options);
-        });
-    }
 
-});
-</script>
+            /* ------------------------------
+               DISTRICT → BLOCKS
+            --------------------------------*/
+            $('#district_id').on('change', function() {
+                const districtId = $(this).val();
+                $('#block_id').html('<option value="">Loading...</option>');
+
+                if (!districtId) {
+                    $('#block_id').html('<option value="">-- Select Block --</option>');
+                    return;
+                }
+
+                loadBlocks(districtId);
+            });
+
+            /* ------------------------------
+               AJAX HELPERS
+            --------------------------------*/
+            function loadDistricts(divisionId, selectedDistrict = null) {
+                $.get(`/admin/districtsby/${divisionId}`, function(data) {
+                    let options = '<option value="">-- Select District --</option>';
+                    data.forEach(function(district) {
+                        const selected = selectedDistrict == district.id ? 'selected' : '';
+                        options +=
+                            `<option value="${district.id}" ${selected}>${district.name}</option>`;
+                    });
+                    $('#district_id').html(options);
+                });
+            }
+
+            function loadBlocks(districtId, selectedBlock = null) {
+                $.get(`/admin/blocksby/${districtId}`, function(data) {
+                    let options = '<option value="">-- Select Block --</option>';
+                    data.forEach(function(block) {
+                        const selected = selectedBlock == block.id ? 'selected' : '';
+                        options += `<option value="${block.id}" ${selected}>${block.name}</option>`;
+                    });
+                    $('#block_id').html(options);
+                });
+            }
+
+        });
+    </script>
 @endpush
-

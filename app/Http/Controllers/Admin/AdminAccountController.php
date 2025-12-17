@@ -25,6 +25,7 @@ class AdminAccountController extends Controller
                         ->orWhere('name', 'like', "%{$search}%")
                         ->orWhere('user_name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('mobile', 'like', "%{$search}%")
                         ->orWhere('role', 'like', "%{$search}%")
 
                         ->orWhereHas('division', function ($q2) use ($search) {
@@ -64,6 +65,7 @@ class AdminAccountController extends Controller
             'name'        => 'required|string|max:255',
             'user_name'   => 'required|string|unique:admin_users,user_name',
             'email'       => 'required|email|unique:admin_users,email',
+            'mobile'      => 'required|string',
             'password'    => 'required|min:6',
             'role'        => 'required|in:admin,division_admin,district_admin,block_admin',
 
@@ -91,6 +93,7 @@ class AdminAccountController extends Controller
             'name'        => $request->name,
             'user_name'   => $request->user_name,
             'email'       => $request->email,
+            'mobile'      => $request->mobile,
             'password'    => Hash::make($request->password),
             'role'        => $request->role,
             'division_id' => $request->division_id,
@@ -131,6 +134,7 @@ class AdminAccountController extends Controller
             'name'     => 'required|string|max:255',
             'user_name' => 'required|unique:admin_users,user_name,' . $account->id,
             'email'    => 'required|email|unique:admin_users,email,' . $account->id,
+            'mobile'   => 'required|string',
             'role'     => 'required|in:admin,division_admin,district_admin,block_admin',
             'password' => 'nullable|min:6',
 
@@ -143,6 +147,7 @@ class AdminAccountController extends Controller
             'name'        => $request->name,
             'user_name'   => $request->user_name,
             'email'       => $request->email,
+            'mobile'      => $request->mobile,
             'role'        => $request->role,
             'division_id' => $request->division_id,
             'district_id' => $request->district_id,

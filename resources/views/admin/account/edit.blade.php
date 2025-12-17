@@ -97,6 +97,29 @@
                                 </div>
                             </div>
 
+                            {{-- Mobile --}}
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">
+                                    Phone <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <span class="input-group-text @error('mobile') border-danger text-danger @enderror">
+                                            <i class="bx bx-phone"></i>
+                                        </span>
+                                        <input type="tel" name="mobile"
+                                            class="form-control @error('mobile') is-invalid @enderror"
+                                            value="{{ old('mobile', $account->mobile) }}"
+                                            pattern="[0-9]{10}"
+                                                    maxlength="10" placeholder="Enter 10-digit mobile number"
+                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    </div>
+                                    @error('mobile')
+                                        <div class="text-danger mt-1"><small>{{ $message }}</small></div>
+                                    @enderror
+                                </div>
+                            </div>
+
                             {{-- Password (optional) --}}
                             <div class="row mb-3">
                                 <label class="col-sm-3 col-form-label">
