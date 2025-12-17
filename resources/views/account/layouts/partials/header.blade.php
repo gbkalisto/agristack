@@ -40,6 +40,8 @@
                                  District Admin
                              @elseif(auth('account')->user()->role == 'block_admin')
                                  Block Admin
+                             @elseif(auth('account')->user()->role == 'division_admin')
+                                 Division Admin
                              @else
                                  {{ ucwords(auth('account')->user()->role) }}
                              @endif
