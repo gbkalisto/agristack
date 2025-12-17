@@ -15,6 +15,8 @@ class AdminUser extends Authenticatable
         'name',
         'user_name',
         'email',
+        'mobile',
+        'profile_picture',
         'password',
         'role',
         'division_id',

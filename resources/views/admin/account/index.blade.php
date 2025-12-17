@@ -1,60 +1,3 @@
-{{-- @extends('admin.layouts.app')
-@section('title', 'Admin Accounts')
-
-@section('content')
-<div class="page-content">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h5>Admin Accounts</h5>
-            <a href="{{ route('admin.accounts.create') }}" class="btn btn-primary btn-sm">Create Account</a>
-        </div>
-
-        <div class="card-body">
-            <table class="table table-bordered align-middle">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Division</th>
-                        <th>District</th>
-                        <th>Block</th>
-                        <th width="120">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($accounts as $account)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $account->name }}</td>
-                            <td>{{ $account->email }}</td>
-                            <td>
-                                <span class="badge bg-info">{{ str_replace('_',' ',ucfirst($account->role)) }}</span>
-                            </td>
-                            <td>{{ $account->division->name ?? '-' }}</td>
-                            <td>{{ $account->district->name ?? '-' }}</td>
-                            <td>{{ $account->block->name ?? '-' }}</td>
-                            <td>
-                                <a href="{{ route('admin.accounts.edit',$account->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('admin.accounts.destroy',$account->id) }}" method="POST" class="d-inline">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Are you sure?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            {{ $accounts->links() }}
-        </div>
-    </div>
-</div>
-@endsection --}}
-
-
 @extends('admin.layouts.app')
 @section('title', 'Admin Users')
 
@@ -99,6 +42,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Username</th>
                                     <th scope="col">Email</th>
+                                    <th scope="col">Phone</th>
                                     <th scope="col">Role</th>
                                     <th scope="col">Division</th>
                                     <th scope="col">District</th>
@@ -113,6 +57,7 @@
                                         <td>{{ $account->name }}</td>
                                         <td>{{ $account->user_name }}</td>
                                         <td>{{ $account->email }}</td>
+                                        <td>{{ $account->mobile }}</td>
                                         <td>{{ $account->role }}</td>
                                         <td>{{ $account->division->name ?? '-' }}</td>
                                         <td>{{ $account->district->name ?? '-' }}</td>
