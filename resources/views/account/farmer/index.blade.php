@@ -32,10 +32,10 @@
                         </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
-                            <input type="search" name="search" class="form-control" placeholder="Search blocks..."
+                            <input type="search" name="search" class="form-control" placeholder="Search Farmers..."
                                 value="{{ request('search') }}">
                             <button class="btn btn-outline-secondary ms-2" type="submit">Search</button>
-                            <a href="{{ route('admin.blocks.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
+                            <a href="{{ route('account.farmers.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
                         </form>
 
 
