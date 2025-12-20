@@ -31,7 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'admin' => \App\Http\Middleware\CheckIsAdmin::class,
-            'auth.account' => \App\Http\Middleware\AccountAuth::class,
+            'account' => \App\Http\Middleware\AccountAuth::class,
             // ✅ Spatie middlewares
             'permission' => PermissionMiddleware::class,
             'role' => RoleMiddleware::class,

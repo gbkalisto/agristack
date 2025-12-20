@@ -12,7 +12,6 @@ class AccountAuth
         if (! Auth::guard('account')->check()) {
             abort(403, 'Unauthorized access');
         }
-
         return $next($request);
     }
 }

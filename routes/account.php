@@ -17,7 +17,7 @@ Route::post('otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
 
 // Authenticated
-Route::middleware('auth:account')->group(function () {
+Route::middleware(['auth:account', 'account'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::any('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('profile', [ProfileController::class, 'showProfile'])->name('profile');
@@ -56,6 +56,13 @@ Route::middleware('auth:account')->group(function () {
         Route::post('store/documents', [FarmerController::class, 'storeDocuments'])
             ->name('store.documents');
 
+        // STEP 6 - Residential
+        Route::get('create/residential', [FarmerController::class, 'createResidential'])
+            ->name('create.residential');
+        Route::post('store/residential', [FarmerController::class, 'storeResidential'])
+            ->name('store.residential');
+
+
 
         /* ========= EDIT ========= */
         Route::get('{farmer}/edit/basic', [FarmerController::class, 'editBasic'])->name('edit.basic');
@@ -72,5 +79,8 @@ Route::middleware('auth:account')->group(function () {
 
         Route::get('{farmer}/edit/documents', [FarmerController::class, 'editDocuments'])->name('edit.documents');
         Route::put('{farmer}/update/documents', [FarmerController::class, 'updateDocuments'])->name('update.documents');
+
+        Route::get('{farmer}/edit/residential', [FarmerController::class, 'editResidential'])->name('edit.residential');
+        Route::put('{farmer}/update/residential', [FarmerController::class, 'updateResidential'])->name('update.residential');
     });
 });

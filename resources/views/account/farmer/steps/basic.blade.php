@@ -68,7 +68,7 @@
                                     Father / Husband Name
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="father_name" class="form-control"
+                                    <input type="text" name="father_name" class="form-control @error('father_name') is-invalid @enderror"
                                         placeholder="Father / Husband name" value="{{ old('father_name') }}">
                                 </div>
                             </div>
@@ -81,10 +81,23 @@
                                 <div class="col-sm-9">
                                     <input type="text" name="mobile"
                                         class="form-control @error('mobile') is-invalid @enderror"
-                                        placeholder="10 digit mobile number" value="{{ old('@prepend ('scripts')
-                                            mobile
-                                        @endprepend') }}">
+                                        placeholder="10 digit mobile number" value="{{ old('mobile') }}">
                                     @error('mobile')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Email --}}
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">
+                                    Email
+                                </label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="email"
+                                        class="form-control @error('email') is-invalid @enderror"
+                                        placeholder="Email address" value="{{ old('email') }}">
+                                    @error('email')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -96,7 +109,7 @@
                                     Aadhaar Number
                                 </label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="aadhaar" class="form-control" placeholder="12 digit Aadhaar"
+                                    <input type="text" name="aadhaar" class="form-control @error('aadhaar') is-invalid @enderror" placeholder="12 digit Aadhaar"
                                         value="{{ old('aadhaar') }}">
                                 </div>
                             </div>
@@ -119,9 +132,9 @@
                                 <div class="col-sm-9">
                                     <select name="gender" class="form-control">
                                         <option value="">-- Select Gender --</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="other">Other</option>
+                                        <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                        <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
                                     </select>
                                 </div>
                             </div>
@@ -134,10 +147,10 @@
                                 <div class="col-sm-9">
                                     <select name="category" class="form-control">
                                         <option value="">-- Select Category --</option>
-                                        <option value="SC">SC</option>
-                                        <option value="ST">ST</option>
-                                        <option value="OBC">OBC</option>
-                                        <option value="General">General</option>
+                                        <option value="SC" {{ old('category') == 'SC' ? 'selected' : '' }}>SC</option>
+                                        <option value="ST" {{ old('category') == 'ST' ? 'selected' : '' }}>ST</option>
+                                        <option value="OBC" {{ old('category') == 'OBC' ? 'selected' : '' }}>OBC</option>
+                                        <option value="General" {{ old('category') == 'General' ? 'selected' : '' }}>General</option>
                                     </select>
                                 </div>
                             </div>
@@ -162,7 +175,7 @@
                                         class="form-control @error('district_id') is-invalid @enderror">
                                         <option value="">-- Select District --</option>
                                         @foreach ($districts as $district)
-                                            <option value="{{ $district->id }}">
+                                            <option value="{{ $district->id }}" {{ old('district_id') == $district->id ? 'selected' : '' }}>
                                                 {{ ucfirst($district->name) }}
                                             </option>
                                         @endforeach

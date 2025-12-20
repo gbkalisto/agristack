@@ -1,5 +1,5 @@
-@extends('account.layouts.app')
-@section('title', 'Blocks')
+@extends('admin.layouts.app')
+@section('title', 'Farmers')
 
 @section('content')
     <div class="page-content">
@@ -25,7 +25,7 @@
                         <!-- Add User Button -->
                         <!-- LEFT: Action Buttons -->
                         <div class="d-flex gap-2">
-                            <a href="{{ route('account.farmers.create') }}" class="btn btn-primary">Add Farmer</a>
+                            <a href="#" class="btn btn-primary">Add Farmer</a>
                             {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                                 Import Block
                             </button> --}}
@@ -68,16 +68,15 @@
                                         <td>{{ ucfirst($farmer->dob) }}</td>
                                         <td>{{ ucfirst($farmer->district->name) }}</td>
                                         <td>
-                                            @can('manage-farmer', $farmer)
-                                                <a href="{{ route('account.farmers.edit.basic', $farmer->id) }}"
-                                                    class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>
-                                                <form action="#" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i
-                                                            class="bx bx-trash"></i></button>
-                                                </form>
-                                            @endcan
+                                            <a href="#"
+                                                class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>
+                                            <form action="#" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i
+                                                        class="bx bx-trash"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

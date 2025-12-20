@@ -69,4 +69,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(FarmerDocument::class);
     }
+    public function residentialDetail()
+    {
+        return $this->hasOne(FarmerResidentialDetail::class);
+    }
 }

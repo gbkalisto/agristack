@@ -6,18 +6,18 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
             <div class="col">
                 <div class="card radius-10 border-start border-0 border-4 border-info">
-                    <div class="card-body">
+                <a href="{{ route('admin.farmers.index') }}"><div class="card-body">
                         <div class="d-flex align-items-center">
                             <div>
                                 <p class="mb-0 text-secondary">Farmers</p>
-                                <h4 class="my-1 text-info">{{ $accounts }}</h4>
+                                <h4 class="my-1 text-info">{{ $farmers }}</h4>
                                 <p class="mb-0 font-13">+2.5% from last week</p>
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i
                                     class='bx bxs-user'></i>
                             </div>
                         </div>
-                    </div>
+                    </div></a>
                 </div>
             </div>
             <div class="col">

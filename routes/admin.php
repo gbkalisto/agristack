@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\BlockController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\Admin\FarmerController;
 use App\Models\Block;
 
 // Public (admin) routes
@@ -71,4 +72,10 @@ Route::middleware('auth:admin')->group(function () {
     //settings route
     Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
+
+     Route::prefix('farmers')->name('farmers.')->group(function () {
+        // LIST
+        Route::get('/', [FarmerController::class, 'index'])
+            ->name('index');
+     });
 });

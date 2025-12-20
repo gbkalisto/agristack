@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Account;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,31 +15,26 @@ use App\Models\FarmerResidentialDetail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class FarmerController extends Controller
 {
-    protected $account;
-    protected $role;
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $this->account = auth('account')->user();
-            $this->role = auth('account')->user()->role;
-            return $next($request);
-        });
-    }
+    // protected $account;
+    // protected $role;
+    // public function __construct()
+    // {
+    //     $this->middleware(function ($request, $next) {
+    //         $this->account = auth('account')->user();
+    //         $this->role = auth('account')->user()->role;
+    //         return $next($request);
+    //     });
+    // }
     /* =========================
         STEP 1 – BASIC DETAILS
     ========================== */
     public function index()
     {
-        $farmers = User::query();
-        if ($this->role == 'block_admin') {
-            $farmers->where('filled_by_admin_user_id', $this->account->id);
-        }
-        $farmers = $farmers->with('district')->latest()->paginate(15);
-        return view('account.farmer.index', compact('farmers'));
+        $farmers = User::with('district')->latest()->paginate(15);
+        return view('admin.farmer.index', compact('farmers'));
     }
 
     public function create()
@@ -265,7 +260,6 @@ class FarmerController extends Controller
             'bankDetail',
             'documents',
         ]);
-        Gate::authorize('manage-farmer', $farmer);
 
         return view('account.farmer.edit.index', compact('farmer'));
     }

@@ -42,8 +42,8 @@
                     </div>
 
                     <div class="form-check mb-4">
-                        <input class="form-check-input" type="checkbox" required>
-                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" required>
+                        <label class="form-check-label" for="flexCheckDefault">
                             I declare that the information provided is correct.
                         </label>
                     </div>
