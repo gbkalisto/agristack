@@ -297,6 +297,7 @@ class FarmerController extends Controller
 
         $farmer->update($request->only([
             'name',
+            'email',
             'father_name',
             'dob',
             'gender',
