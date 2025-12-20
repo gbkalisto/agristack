@@ -46,4 +46,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+    public function landDetail()
+    {
+        return $this->hasOne(FarmerLandDetail::class);
+    }
+
+    public function cropDetail()
+    {
+        return $this->hasOne(FarmerCropDetail::class);
+    }
+
+    public function bankDetail()
+    {
+        return $this->hasOne(FarmerBankDetail::class);
+    }
+
+    public function documents()
+    {
+        return $this->hasOne(FarmerDocument::class);
+    }
 }

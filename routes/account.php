@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\DashboardController;
 use App\Http\Controllers\Account\ProfileController;
+use App\Http\Controllers\Account\FarmerController;
 
 // Guest (not logged in)
 Route::middleware('guest:account')->group(function () {
@@ -20,4 +21,56 @@ Route::middleware('auth:account')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::any('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('profile', [ProfileController::class, 'showProfile'])->name('profile');
+
+    // Farmer Routes
+    Route::prefix('farmers')->name('farmers.')->group(function () {
+        // LIST
+        Route::get('/', [FarmerController::class, 'index'])
+            ->name('index');
+        // STEP 1
+        Route::get('create', [FarmerController::class, 'create'])
+            ->name('create');
+        Route::post('store/basic', [FarmerController::class, 'storeBasic'])
+            ->name('store.basic');
+        // STEP 2
+        Route::get('create/land', [FarmerController::class, 'createLand'])
+            ->name('create.land');
+        Route::post('store/land', [FarmerController::class, 'storeLand'])
+            ->name('store.land');
+
+        // STEP 3
+        Route::get('create/crop', [FarmerController::class, 'createCrop'])
+            ->name('create.crop');
+        Route::post('store/crop', [FarmerController::class, 'storeCrop'])
+            ->name('store.crop');
+
+        // STEP 4
+        Route::get('create/bank', [FarmerController::class, 'createBank'])
+            ->name('create.bank');
+        Route::post('store/bank', [FarmerController::class, 'storeBank'])
+            ->name('store.bank');
+
+        // STEP 5
+        Route::get('create/documents', [FarmerController::class, 'createDocuments'])
+            ->name('create.documents');
+        Route::post('store/documents', [FarmerController::class, 'storeDocuments'])
+            ->name('store.documents');
+
+
+        /* ========= EDIT ========= */
+        Route::get('{farmer}/edit/basic', [FarmerController::class, 'editBasic'])->name('edit.basic');
+        Route::put('{farmer}/update/basic', [FarmerController::class, 'updateBasic'])->name('update.basic');
+
+        Route::get('{farmer}/edit/land', [FarmerController::class, 'editLand'])->name('edit.land');
+        Route::put('{farmer}/update/land', [FarmerController::class, 'updateLand'])->name('update.land');
+
+        Route::get('{farmer}/edit/crop', [FarmerController::class, 'editCrop'])->name('edit.crop');
+        Route::put('{farmer}/update/crop', [FarmerController::class, 'updateCrop'])->name('update.crop');
+
+        Route::get('{farmer}/edit/bank', [FarmerController::class, 'editBank'])->name('edit.bank');
+        Route::put('{farmer}/update/bank', [FarmerController::class, 'updateBank'])->name('update.bank');
+
+        Route::get('{farmer}/edit/documents', [FarmerController::class, 'editDocuments'])->name('edit.documents');
+        Route::put('{farmer}/update/documents', [FarmerController::class, 'updateDocuments'])->name('update.documents');
+    });
 });

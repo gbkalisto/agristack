@@ -58,10 +58,22 @@
                                         <td>{{ $account->user_name }}</td>
                                         <td>{{ $account->email }}</td>
                                         <td>{{ $account->mobile }}</td>
-                                        <td>{{ $account->role }}</td>
-                                        <td>{{ $account->division->name ?? '-' }}</td>
-                                        <td>{{ $account->district->name ?? '-' }}</td>
-                                        <td>{{ $account->block->name ?? '-' }}</td>
+                                        <td>
+                                            @if ($account->role == 'Admin')
+                                                <span class="badge bg-primary">Admin</span>
+                                            @elseif($account->role == 'block_admin')
+                                                <span class="badge bg-secondary">Block Admin</span>
+                                            @elseif($account->role == 'district_admin')
+                                                <span class="badge bg-success">District Admin</span>
+                                            @elseif($account->role == 'division_admin')
+                                                <span class="badge bg-warning text-dark">Division Admin</span>
+                                            @else
+                                                <span class="badge bg-info text-dark">{{ $account->role }}</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ ucfirst($account->division->name ?? '-') }}</td>
+                                        <td>{{ ucfirst($account->district->name ?? '-') }}</td>
+                                        <td>{{ ucfirst($account->block->name ?? '-') }}</td>
 
                                         <td>
                                             <a href="{{ route('admin.accounts.edit', $account->id) }}"
