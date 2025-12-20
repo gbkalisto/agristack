@@ -61,6 +61,7 @@ class FarmerController extends Controller
             'name'                => $request->name,
             'father_name'         => $request->father_name,
             'phone'              => $request->mobile,
+            'email'              => $request->email,
             'aadhaar'             => $request->aadhaar,
             'dob'                 => $request->dob,
             'gender'              => $request->gender,
