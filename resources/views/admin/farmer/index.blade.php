@@ -54,11 +54,15 @@
                                     <th scope="col">Category</th>
                                     <th scope="col">DOB</th>
                                     <th scope="col">District</th>
+                                    <th scope="col">Filled By</th>
                                     <th scope="col">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($farmers as $farmer)
+                                {{-- @php
+                                    dd($farmer);
+                                @endphp --}}
                                     <tr>
                                         <th scope="row"> {{ $farmer->id }} </th>
                                         <td>{{ ucfirst($farmer->name) }}</td>
@@ -67,6 +71,7 @@
                                         <td>{{ ucfirst($farmer->category) }}</td>
                                         <td>{{ ucfirst($farmer->dob) }}</td>
                                         <td>{{ ucfirst($farmer->district->name) }}</td>
+                                        <td>{{ ucfirst($farmer->filledByAdmin->name) }}</td>
                                         <td>
                                             <a href="#"
                                                 class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>

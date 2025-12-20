@@ -50,6 +50,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(District::class);
     }
+
     public function landDetail()
     {
         return $this->hasOne(FarmerLandDetail::class);
@@ -72,5 +73,9 @@ class User extends Authenticatable
     public function residentialDetail()
     {
         return $this->hasOne(FarmerResidentialDetail::class);
+    }
+    public function filledByAdmin()
+    {
+        return $this->belongsTo(AdminUser::class, 'filled_by_admin_user_id');
     }
 }

@@ -50,4 +50,11 @@ class AdminUser extends Authenticatable
     {
         return $this->belongsTo(Block::class);
     }
+
+    // App\Models\AdminUser.php
+
+    public function farmers()
+    {
+        return $this->hasMany(User::class, 'filled_by_admin_user_id');
+    }
 }

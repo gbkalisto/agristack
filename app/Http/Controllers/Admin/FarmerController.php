@@ -33,7 +33,7 @@ class FarmerController extends Controller
     ========================== */
     public function index()
     {
-        $farmers = User::with('district')->latest()->paginate(15);
+        $farmers = User::with('district','filledByAdmin')->latest()->paginate(15);
         return view('admin.farmer.index', compact('farmers'));
     }
 
