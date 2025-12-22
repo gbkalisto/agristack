@@ -4,7 +4,7 @@
 @section('content')
     <div class="page-content">
 
-        @include('account.farmer.stepper', ['currentStep' => 5])
+        @include('account.farmer.stepper', ['currentStep' => 6])
 
         <div class="card">
             <form method="POST" action="{{ route('account.farmers.update.documents', $farmer->id) }}"
