@@ -26,26 +26,50 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username'    => 'required',
+            'username' => 'required',
             'password' => 'required',
-            'captcha'    => 'required|string',
+            'captcha'  => 'required|string',
         ]);
 
+        /* ---------------- CAPTCHA CHECK ---------------- */
         if ($request->captcha !== Session::get('captcha')) {
-            return back()->withErrors(['captcha' => 'Invalid Captcha']);
-        }
-        Session::forget('captcha');
-        $loginField = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'user_name';
-        if (Auth::guard('account')->attempt([
-            $loginField => $request->username,
-            'password' => $request->password,
-            'status' => 1
-        ])) {
-            return redirect()->route('account.otp.form');
+            return response()->json([
+                'status' => false,
+                'errors' => [
+                    'captcha' => ['Invalid Captcha']
+                ]
+            ], 422);
         }
 
-        return back()->withErrors(['username' => 'Invalid credentials']);
+        Session::forget('captcha');
+
+        /* ---------------- IDENTIFIER ---------------- */
+        $loginField = filter_var($request->username, FILTER_VALIDATE_EMAIL)
+            ? 'email'
+            : 'user_name';
+
+        /* ---------------- LOGIN ATTEMPT ---------------- */
+        if (Auth::guard('account')->attempt([
+            $loginField => $request->username,
+            'password'  => $request->password,
+            'status'    => 1,
+        ])) {
+
+            return response()->json([
+                'status'   => true,
+                'redirect' => route('account.otp.form'), // OTP page
+            ]);
+        }
+
+        /* ---------------- INVALID CREDENTIALS ---------------- */
+        return response()->json([
+            'status' => false,
+            'errors' => [
+                'username' => ['Invalid credentials']
+            ]
+        ], 422);
     }
+
 
 
 

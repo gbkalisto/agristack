@@ -7,163 +7,13 @@
     <title>Farmer Registry – Login</title>
     <link rel="icon" type="image/png" href="img/agristack-favicon.png">
     <link rel="favicon" type="image/png" href="img/agristack-favicon.png">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ asset('/theme/css/style.css') }}">
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        /* ===== COMMON THEME (You can change colors later) ===== */
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background: linear-gradient(rgba(12, 90, 60, .85), rgba(12, 90, 60, .85)), url('img/farmer.jpg');
-            background-size: cover;
-            background-position: center;
-            min-height: 100vh;
-            color: #ffffff;
-        }
-
-        .top-nav {
-            padding: 14px 50px;
-            font-size: 17px;
-            background: transparent;
-        }
-
-        .top-nav a {
-            color: #ffd84d;
-            /* yellow like govt site */
-            text-decoration: none;
-            margin-right: 20px;
-            font-weight: 600;
-        }
-
-        .top-nav a:hover {
-            color: #ffea80;
-            text-decoration: underline;
-        }
-
-        .nic-logo {
-            margin-right: 30px;
-            /* NIC ke baad space */
-            display: inline-block;
-        }
-
-        .nic-logo-img {
-            height: 45px;
-            width: auto;
-            margin-right: 30px;
-            vertical-align: middle;
-        }
-
-
-        .login-card {
-            background: #ffffff;
-            color: #2c2c2c;
-            border-radius: 28px;
-            padding: 34px 32px;
-            max-width: 420px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, .35);
-        }
-
-        .role-btn {
-            border: 1px solid #ccc;
-            padding: 6px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            background: #f5f5f5;
-            font-size: 14px;
-        }
-
-        .role-btn.active {
-            background: #28c76f;
-            color: #ffffff;
-            border-color: #28c76f;
-        }
-
-        .form-control {
-            font-size: 14px;
-            padding: 10px;
-        }
-
-        .btn-main {
-            background: #28c76f;
-            color: #ffffff;
-            border: none;
-            font-weight: 500;
-        }
-
-        .btn-main:disabled {
-            background: #ccc;
-        }
-
-        .create-btn {
-            border: 1.5px solid #28c76f;
-            color: #28c76f;
-            background: #ffffff;
-            font-weight: 500;
-        }
-
-        /* ===== DASHBOARD ===== */
-        .card-kpi {
-            border-radius: 14px;
-            color: #fff;
-            padding: 20px;
-            font-weight: 600;
-        }
-
-        .bg1 {
-            background: linear-gradient(135deg, #9b8df3, #bfa7ff);
-        }
-
-        .bg2 {
-            background: linear-gradient(135deg, #ff7eb3, #ffb6d5);
-        }
-
-        .bg3 {
-            background: linear-gradient(135deg, #fbc531, #ffeaa7);
-        }
-
-        /* ===== MOBILE FIX (LOGIN CENTER) ===== */
-        @media (max-width: 768px) {
-            body {
-                background-attachment: fixed;
-            }
-
-            .top-nav {
-                text-align: center;
-                padding: 12px 20px;
-            }
-
-            /* NIC LOGO */
-            .nic-logo-img {
-                height: 38px;
-                display: block;
-                margin: 0 auto 10px auto;
-                /* center + नीचे gap */
-            }
-
-            /* MENU LINKS – NIC LOGO KE NICHE */
-            .top-nav a {
-                display: block;
-                /* यही main change है */
-                margin: 6px 0;
-                font-size: 13px;
-            }
-
-            .login-card {
-                margin: 0 auto;
-                border-radius: 22px;
-                padding: 28px 22px;
-            }
-
-            .container-fluid {
-                padding-top: 30px;
-            }
-
-            .col-lg-6 p {
-                width: 100% !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -195,7 +45,7 @@
             <!-- RIGHT LOGIN CARD -->
             <div class="col-lg-4 col-md-5 d-flex justify-content-center">
                 <div class="login-card w-100">
-                    <form method="POST" id="loginForm" novalidate>
+                    <form method="POST" action="{{ route('account.login.submit') }}" id="loginForm" novalidate>
                         @csrf
                         <div class="text-center mb-3">
                             <img src="img/uplogo.png" alt="Logo"
@@ -214,7 +64,8 @@
                         <div class="mb-3">
                             <input id="username" name="username" type="text"
                                 class="form-control  @error('username') is-invalid @enderror" required
-                                placeholder="Insert User ID / Email" value="{{ old('username') }}">
+                                placeholder="Insert User ID / Email" autocomplete="off" value="{{ old('username') }}">
+                            <div class="invalid-feedback"></div>
                             @error('username')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -223,7 +74,8 @@
                         <div class="mb-2">
                             <input type="password" name="password" id="password"
                                 class="form-control  @error('password') is-invalid @enderror"
-                                placeholder="Enter password" required>
+                                placeholder="Enter password" autocomplete="off" required>
+                            <div class="invalid-feedback"></div>
                             @error('password')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -244,13 +96,15 @@
 
                             <input type="text" id="captcha" name="captcha"
                                 class="form-control  @error('captcha') is-invalid @enderror mt-2"
-                                placeholder="Enter Captcha" value="{{ old('captcha') }}" required>
+                                placeholder="Enter Captcha" value="{{ old('captcha') }}" autocomplete="off" required>
+                            <div class="invalid-feedback"></div>
                             @error('captcha')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
-                        <button class="btn btn-main w-100 mt-2" onClick="handleLogin()">Log In</button>
+                        {{-- <button class="btn btn-main w-100 mt-2" onClick="handleLogin()">Log In</button> --}}
+                        <button type="submit" class="btn btn-main w-100 mt-2">Log In</button>
                         <a href="" id="createBtn" class="btn create-btn w-100 mt-3 d-none">Create New User
                             Account</a>
                     </form>
@@ -263,77 +117,20 @@
     <!-- ===== JS ===== -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script>
-        function setRole(role) {
-            const officialBtn = document.getElementById('officialBtn');
-            const farmerBtn = document.getElementById('farmerBtn');
-            const username = document.getElementById('username');
-            const createBtn = document.getElementById('createBtn');
-
-            if (role === 'official') {
-                $("#loginForm").attr("action", "{{ route('account.login') }}");
-                officialBtn.classList.add('active');
-                farmerBtn.classList.remove('active');
-                username.placeholder = 'Insert User ID / Email';
-                createBtn.classList.add('d-none');
-            } else {
-                farmerBtn.classList.add('active');
-                officialBtn.classList.remove('active');
-                username.placeholder = 'Insert Registered Mobile Number';
-                createBtn.classList.remove('d-none');
+        window.APP = {
+            captchaUrl: "{{ route('captcha') }}",
+            loginRoutes: {
+                official: "{{ route('account.login.submit') }}",
+                farmer: "{{ route('login') }}"
             }
-        }
+        };
     </script>
 
-
-    <script>
-        let currentRole = 'official';
-        $("#loginForm").attr("action", "{{ route('account.login') }}");
-
-        function setRole(role) {
-            currentRole = role;
-
-            const officialBtn = document.getElementById('officialBtn');
-            const farmerBtn = document.getElementById('farmerBtn');
-            const username = document.getElementById('username');
-            const createBtn = document.getElementById('createBtn');
-
-            if (role === 'official') {
-                $("#loginForm").attr("action", "{{ route('account.login') }}");
-                officialBtn.classList.add('active');
-                farmerBtn.classList.remove('active');
-                username.placeholder = 'Insert User ID / Email';
-                createBtn.classList.add('d-none');
-            } else {
-                $("#loginForm").attr("action", "{{ route('login') }}");
-                farmerBtn.classList.add('active');
-                officialBtn.classList.remove('active');
-                username.placeholder = 'Insert Registered Mobile Number';
-                createBtn.classList.remove('d-none');
-            }
-        }
-
-        function handleLogin() {
-            if (currentRole === 'official') {
-                // ✅ Official → OTP page
-                window.location.href = 'officialotp.php';
-            } else {
-                // ✅ Farmer → direct page (abhi example)
-                window.location.href = 'farmerotp.php';
-                // baad me jo page bologe yahan change kar dena
-            }
-        }
-
-        function reloadCaptcha() {
-            document.getElementById('captchaImage').src =
-                "{{ route('captcha') }}?" + Date.now();
-        }
+    <script src="{{ asset('/theme/js/main.js') }}">
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        crossorigin = "anonymous"
+        referrerpolicy = "no-referrer">
     </script>
-
-
-
-
-
-
 
 </body>
 

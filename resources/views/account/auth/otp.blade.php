@@ -5,11 +5,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Official OTP Verification</title>
+    <link rel="icon" type="image/png" href="img/agristack-favicon.png">
+    <link rel="favicon" type="image/png" href="img/agristack-favicon.png">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
             font-family: "Segoe UI", sans-serif;
@@ -77,22 +80,32 @@
 
                     <!-- Mobile -->
                     <div class="mb-3">
-                        <label class="form-label text-muted">Mobile Number</label>
-                        <input type="text" name="mobile" id="mobile" class="form-control"
-                            placeholder="Enter registered mobile number">
+                        <div class="form-group">
+                            <label class="form-label text-muted">Mobile Number</label>
+                            <input type="tel" id="mobile" class="form-control @error('mobile') is-invalid @enderror"
+                                placeholder="Enter registered mobile number" maxlength="10" inputmode="numeric">
 
-                        <button class="btn btn-outline-main mt-2 w-10" id="sendOtp">
+                            <small class="text-danger d-none" id="mobileError"></small>
+                        </div>
+
+
+                        <button class="btn btn-outline-main mt-2" id="sendOtp">
                             Get OTP
                         </button>
                     </div>
 
                     <!-- OTP -->
-                    <div class="mb-3 d-flex gap-2">
-                        <input type="text" id="otp" class="form-control" placeholder="Enter OTP" disabled>
+                    <div class="mb-3">
+                        <div class="d-flex gap-2">
+                            <input type="text" id="otp" class="form-control" placeholder="Enter OTP"
+                                maxlength="6" disabled>
 
-                        <button class="btn btn-outline-main" id="verifyOtp" disabled>
-                            Verify
-                        </button>
+                            <button class="btn btn-outline-main" id="verifyOtp" disabled>
+                                Verify
+                            </button>
+                        </div>
+
+                        <small class="text-danger d-none" id="otpError"></small>
                     </div>
 
                     <!-- Login -->
@@ -106,20 +119,54 @@
     </div>
 
 
+    <!-- ===== JS ===== -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
 </body>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 <script>
     const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
+    // Elements
+    const mobileInput = document.getElementById('mobile');
+    const otpInput = document.getElementById('otp');
+    const sendOtpBtn = document.getElementById('sendOtp');
+    const verifyOtpBtn = document.getElementById('verifyOtp');
+    const loginBtn = document.getElementById('loginBtn');
+
+    const mobileError = document.getElementById('mobileError');
+    const otpError = document.getElementById('otpError');
+
+    // Helpers
+    function showError(el, msg) {
+        el.textContent = msg;
+        el.classList.remove('d-none');
+    }
+
+    function hideError(el) {
+        el.textContent = '';
+        el.classList.add('d-none');
+    }
+
+    // Mobile input: allow only digits
+    mobileInput.addEventListener('input', () => {
+        mobileInput.value = mobileInput.value.replace(/\D/g, '');
+    });
+
     // SEND OTP
-    document.getElementById('sendOtp').addEventListener('click', function(e) {
+    sendOtpBtn.addEventListener('click', function(e) {
         e.preventDefault();
 
-        const mobile = document.getElementById('mobile').value;
+        const mobile = mobileInput.value.trim();
+        hideError(mobileError);
 
         if (!mobile) {
-            alert('Please enter mobile number');
+            showError(mobileError, 'Mobile number is required');
+            return;
+        }
+
+        if (!/^[0-9]\d{9}$/.test(mobile)) {
+            showError(mobileError, 'Enter a valid 10-digit mobile number');
             return;
         }
 
@@ -135,25 +182,39 @@
             })
             .then(res => res.json())
             .then(data => {
-                alert(data.message);
-
-                if (data.status === true) {
-                    // Enable OTP field & verify button
-                    document.getElementById('otp').disabled = false;
-                    document.getElementById('verifyOtp').disabled = false;
+                if (data.status) {
+                    iziToast.success({
+                        title: 'Success',
+                        message: data.message,
+                        position: 'topRight'
+                    });
+                    otpInput.disabled = false;
+                    verifyOtpBtn.disabled = false;
+                } else {
+                    iziToast.error({
+                        title: 'Error',
+                        message: data.message,
+                        position: 'topRight'
+                    });
                 }
             });
     });
 
     // VERIFY OTP
-    document.getElementById('verifyOtp').addEventListener('click', function(e) {
+    verifyOtpBtn.addEventListener('click', function(e) {
         e.preventDefault();
 
-        const mobile = document.getElementById('mobile').value;
-        const otp = document.getElementById('otp').value;
+        const mobile = mobileInput.value.trim();
+        const otp = otpInput.value.trim();
+        hideError(otpError);
 
         if (!otp) {
-            alert('Please enter OTP');
+            showError(otpError, 'OTP is required');
+            return;
+        }
+
+        if (!/^\d{6}$/.test(otp)) {
+            showError(otpError, 'OTP must be 6 digits');
             return;
         }
 
@@ -170,28 +231,31 @@
             })
             .then(res => res.json())
             .then(data => {
-                //alert(data.message);
-                console.log(data);
+                if (data.status) {
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'OTP verified successfully. You can now login.',
+                        position: 'topRight'
+                    });
 
-                if (data.status === true) {
-                    // Enable login button
-                    document.getElementById('loginBtn').disabled = false;
-
-                    // Lock fields
-                    document.getElementById('mobile').readOnly = true;
-                    document.getElementById('otp').readOnly = true;
-                    alert('OTP verified successfully. You can now login.');
+                    loginBtn.disabled = false;
+                    mobileInput.readOnly = true;
+                    otpInput.readOnly = true;
                 } else {
-                    alert(data.message);
+                    iziToast.error({
+                        title: 'Error',
+                        message: data.message,
+                        position: 'topRight'
+                    });
                 }
             });
     });
 
-    //LOGIN (Redirect)
-    //alert('Login functionality to be implemented');
-    document.getElementById('loginBtn').addEventListener('click', function() {
+    // LOGIN
+    loginBtn.addEventListener('click', function() {
         window.location.href = '/account/dashboard';
     });
 </script>
+
 
 </html>
