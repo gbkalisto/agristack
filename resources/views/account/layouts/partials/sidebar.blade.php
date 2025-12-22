@@ -31,12 +31,20 @@
                             </li>
 
                             <li>
+                                <a href="{{ route('account.farmers.index') }}">
+                                    <div class="parent-icon"><i class="bx bx-message-square-edit"></i>
+                                    </div>
+                                    <div class="menu-title">Farmer registry</div>
+                                </a>
+                            </li>
+
+                            {{-- <li>
                                 <a href="{{ route('account.profile') }}">
                                     <div class="parent-icon"><i class="bx bx-user-circle"></i>
                                     </div>
                                     <div class="menu-title">Profile</div>
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                         <!--end navigation-->
                     </div>

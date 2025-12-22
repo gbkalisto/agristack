@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+    public function stepForm()
+    {
+        return view('account.form');
+    }
+
     public function showLogin()
     {
         return view('account.auth.login');

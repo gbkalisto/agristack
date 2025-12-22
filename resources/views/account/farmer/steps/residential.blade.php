@@ -48,8 +48,14 @@
                     <div class="row mb-3">
                         <label class="col-sm-3 col-form-label">Division</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control  @error('division_id') is-invalid @enderror"
-                                name="division_id" value="1" readonly>
+                            <select name="division_id" id="division_id"
+                                class="form-control  @error('division_id') is-invalid @enderror">
+                                <option value="">--select--</option>
+                                @foreach ($divisions as $division)
+                                    <option value="{{ old('division_id', $division->id) }}">{{ ucfirst($division->name) }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -57,9 +63,10 @@
                     <div class="row mb-3">
                         <label class="col-sm-3 col-form-label">District <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
-                            <input type="text" name="district_id"
-                                class="form-control @error('district_id') is-invalid @enderror"
-                                value="{{ old('district_id') }}" required>
+                            <select name="district_id" id="district_id"
+                                class="form-control @error('district_id') is-invalid @enderror" required>
+                                <option value="">--select--</option>
+                            </select>
                         </div>
                     </div>
 
@@ -67,9 +74,10 @@
                     <div class="row mb-3">
                         <label class="col-sm-3 col-form-label">Block <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
-                            <input type="text" name="block_id"
-                                class="form-control @error('block_id') is-invalid @enderror" value="{{ old('block_id') }}"
-                                required>
+                            <select name="block_id" id="block_id"
+                                class="form-control @error('block_id') is-invalid @enderror">
+                                <option value="">--select--</option>
+                            </select>
                         </div>
                     </div>
 
@@ -86,8 +94,8 @@
                     <div class="row mb-4">
                         <label class="col-sm-3 col-form-label">PIN Code</label>
                         <div class="col-sm-9">
-                            <input type="text" name="pincode" value="{{ old('pincode') }}" class="form-control @error('pincode') is-invalid @enderror"
-                                maxlength="6">
+                            <input type="text" name="pincode" value="{{ old('pincode') }}"
+                                class="form-control @error('pincode') is-invalid @enderror" maxlength="6">
                         </div>
                     </div>
 
@@ -111,3 +119,67 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            /* ------------------------------
+               DIVISION → DISTRICTS
+            --------------------------------*/
+            $('#division_id').on('change', function() {
+                const divisionId = $(this).val();
+                $('#district_id').html('<option value="">Loading...</option>');
+                $('#block_id').html('');
+
+                if (!divisionId) {
+                    $('#district_id').html('<option value="">-- Select District --</option>');
+                    return;
+                }
+
+                loadDistricts(divisionId);
+            });
+
+            /* ------------------------------
+               DISTRICT → BLOCKS
+            --------------------------------*/
+            $('#district_id').on('change', function() {
+                const districtId = $(this).val();
+                $('#block_id').html('<option value="">Loading...</option>');
+
+                if (!districtId) {
+                    $('#block_id').html('<option value="">-- Select Block --</option>');
+                    return;
+                }
+
+                loadBlocks(districtId);
+            });
+
+            /* ------------------------------
+               AJAX HELPERS
+            --------------------------------*/
+            function loadDistricts(divisionId, selectedDistrict = null) {
+                // $.get(`/admin/districtsby/${divisionId}`, function(data) {
+                $.get(`/districtsby/${divisionId}`, function(data) {
+                    let options = '<option value="">-- Select District --</option>';
+                    data.forEach(function(district) {
+                        const selected = selectedDistrict == district.id ? 'selected' : '';
+                        options +=
+                            `<option value="${district.id}" ${selected}>${district.name}</option>`;
+                    });
+                    $('#district_id').html(options);
+                });
+            }
+
+            function loadBlocks(districtId, selectedBlock = null) {
+                $.get(`/blocksby/${districtId}`, function(data) {
+                    let options = '<option value="">-- Select Block --</option>';
+                    data.forEach(function(block) {
+                        const selected = selectedBlock == block.id ? 'selected' : '';
+                        options += `<option value="${block.id}" ${selected}>${block.name}</option>`;
+                    });
+                    $('#block_id').html(options);
+                });
+            }
+
+        });
+    </script>
+@endpush

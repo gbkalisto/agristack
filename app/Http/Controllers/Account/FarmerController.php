@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Farmer;
 use App\Models\User;
 use App\Models\District;
+use App\Models\Division;
 use App\Models\FarmerLandDetail;
 use App\Models\FarmerCropDetail;
 use App\Models\FarmerBankDetail;
@@ -216,7 +217,8 @@ class FarmerController extends Controller
 
     public function createResidential()
     {
-        return view('account.farmer.steps.residential');
+        $divisions = Division::orderBy('name')->get();
+        return view('account.farmer.steps.residential', compact('divisions'));
     }
 
     public function storeResidential(Request $request)
@@ -276,6 +278,7 @@ class FarmerController extends Controller
 
     public function editBasic(User $farmer)
     {
+        Gate::authorize('manage-farmer', $farmer);
         $farmer->load([
             'district',
             'landDetail',
@@ -311,6 +314,7 @@ class FarmerController extends Controller
 
     public function editLand(User $farmer)
     {
+        Gate::authorize('manage-farmer', $farmer);
         $land = FarmerLandDetail::firstOrNew(['user_id' => $farmer->id]);
 
         return view('account.farmer.edit.steps.land', [
@@ -339,6 +343,7 @@ class FarmerController extends Controller
 
     public function editCrop(User $farmer)
     {
+        Gate::authorize('manage-farmer', $farmer);
         $crop = FarmerCropDetail::firstOrNew(['user_id' => $farmer->id]);
 
         return view('account.farmer.edit.steps.crop', compact('farmer', 'crop') + [
@@ -359,6 +364,7 @@ class FarmerController extends Controller
 
     public function editBank(User $farmer)
     {
+        Gate::authorize('manage-farmer', $farmer);
         $bank = FarmerBankDetail::firstOrNew(['user_id' => $farmer->id]);
 
         return view('account.farmer.edit.steps.bank', compact('farmer', 'bank') + [
@@ -384,6 +390,7 @@ class FarmerController extends Controller
 
     public function editDocuments(User $farmer)
     {
+        Gate::authorize('manage-farmer', $farmer);
         $documents = FarmerDocument::firstOrNew(['user_id' => $farmer->id]);
 
         return view('account.farmer.edit.steps.documents', compact('farmer', 'documents') + [
@@ -426,9 +433,11 @@ class FarmerController extends Controller
 
     public function editResidential(User $farmer)
     {
+        Gate::authorize('manage-farmer', $farmer);
         $residential = FarmerResidentialDetail::firstOrNew(['user_id' => $farmer->id]);
+        $divisions = Division::orderBy('name')->get();
 
-        return view('account.farmer.edit.steps.residential', compact('farmer', 'residential') + [
+        return view('account.farmer.edit.steps.residential', compact('farmer', 'residential', 'divisions') + [
             'isEdit' => true,
             'currentStep' => 6,
         ]);

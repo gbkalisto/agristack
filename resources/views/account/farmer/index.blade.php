@@ -66,9 +66,9 @@
                                         <td>{{ ucfirst($farmer->gender) }}</td>
                                         <td>{{ ucfirst($farmer->category) }}</td>
                                         <td>{{ ucfirst($farmer->dob) }}</td>
-                                        <td>{{ ucfirst($farmer->district->name) }}</td>
+                                        <td>{{ ucfirst($farmer->district->name ?? '-') }}</td>
                                         <td>
-                                            @can('manage-farmer', $farmer)
+                                            {{-- @can('manage-farmer', $farmer) --}}
                                                 <a href="{{ route('account.farmers.edit.basic', $farmer->id) }}"
                                                     class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>
                                                 <form action="#" method="POST" class="d-inline">
@@ -77,7 +77,7 @@
                                                     <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i
                                                             class="bx bx-trash"></i></button>
                                                 </form>
-                                            @endcan
+                                            {{-- @endcan --}}
                                         </td>
                                     </tr>
                                 @endforeach

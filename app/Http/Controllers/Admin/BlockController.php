@@ -173,7 +173,11 @@ class BlockController extends Controller
     {
         return Block::where('district_id', $districtId)
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(function ($block) {
+                $block->name = ucwords(strtolower($block->name));
+                return $block;
+            });
     }
 
     public function import(Request $request)

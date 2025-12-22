@@ -27,7 +27,10 @@
     <link rel="stylesheet" href="{{ asset('theme') }}/css/header-colors.css">
     <link rel="theme-link" href="https://codervent.com/rocker/demo/vertical/index.html">
     <link href="{{ asset('theme') }}/plugins/fancy-file-uploader/fancy_fileupload.css" rel="stylesheet" />
+    <link href="{{ asset('theme') }}/plugins/bs-stepper/css/bs-stepper.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <title>Account panel - @yield('title')</title>
+
     <style>
         .btn i {
             margin-right: 0px !important;
@@ -94,12 +97,17 @@
     <script src="{{ asset('theme') }}/plugins/chartjs/js/chart.js"></script>
     <script src="{{ asset('theme') }}/js/index.js"></script>
     <script src="{{ asset('theme') }}/js/custom.js"></script>
-    <!--app JS-->
-    <script src="{{ asset('theme') }}/js/app.js"></script>
+
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.ui.widget.js"></script>
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.fileupload.js"></script>
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.iframe-transport.js"></script>
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.fancy-fileupload.js"></script>
+    <script src="{{ asset('theme') }}/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+    <script src="{{ asset('theme') }}/plugins/bs-stepper/js/main.js"></script>
+    <!--app JS-->
+    <script src="{{ asset('theme') }}/js/app.js"></script>
+
+
     <script>
         // new PerfectScrollbar(".app-container")
     </script>
@@ -122,8 +130,6 @@
     }) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.
 </script>
 <script src='{{ asset('theme') }}/signals/js/clients/scc-c2/scc-c2.min.js'></script>
-
-
 @stack('scripts')
 
 

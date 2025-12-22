@@ -16,6 +16,8 @@ Route::get('otp', [AuthController::class, 'otpForm'])->name('otp.form');
 Route::post('otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
 Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
 
+Route::get('step-form', [AuthController::class, 'stepForm'])->name('stepform');
+
 // Authenticated
 Route::middleware(['auth:account', 'account'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

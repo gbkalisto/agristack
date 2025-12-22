@@ -141,7 +141,11 @@ class DistrictController extends Controller
     {
         return District::where('division_id', $divisionId)
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(function ($division) {
+                $division->name = ucwords(strtolower($division->name));
+                return $division;
+            });
     }
 
     public function import(Request $request)
