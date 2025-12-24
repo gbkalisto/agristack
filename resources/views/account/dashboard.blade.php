@@ -12,7 +12,7 @@
                                 <div>
                                     <p class="mb-0 text-secondary">Total Farmers</p>
                                     <h4 class="my-1 text-info">{{ $farmerCount }}</h4>
-                                    <p class="mb-0 font-13">+2.5% from last week</p>
+                                    {{-- <p class="mb-0 font-13">+2.5% from last week</p> --}}
                                 </div>
                                 <div class="widgets-icons-2 rounded-circle bg-gradient-blues text-white ms-auto"><i
                                         class='bx bxs-user'></i>
@@ -29,8 +29,8 @@
                         <div class="d-flex align-items-center">
                             <div>
                                 <p class="mb-0 text-secondary">Farmer Registration</p>
-                                <h4 class="my-1 text-danger">0</h4>
-                                <p class="mb-0 font-13">+5.4% from last week</p>
+                                <h4 class="my-1 text-danger">+</h4>
+                                {{-- <p class="mb-0 font-13">+5.4% from last week</p> --}}
                             </div>
                             <div class="widgets-icons-2 rounded-circle bg-gradient-burning text-white ms-auto">
                                 <i class='bx bxs-card'></i>

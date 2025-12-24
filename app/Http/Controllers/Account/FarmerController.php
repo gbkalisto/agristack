@@ -73,14 +73,14 @@ class FarmerController extends Controller
                     });
             });
         }
-
+        $role = $this->role;
         $farmers = $farmers
             ->with('district')
             ->latest()
             ->paginate(15)
             ->withQueryString(); // keep search on pagination
 
-        return view('account.farmer.index', compact('farmers'));
+        return view('account.farmer.index', compact('farmers', 'role'));
     }
 
 

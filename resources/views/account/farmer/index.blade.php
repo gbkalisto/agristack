@@ -23,12 +23,11 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <!-- Add User Button -->
-                        <!-- LEFT: Action Buttons -->
+
                         <div class="d-flex gap-2">
-                            <a href="{{ route('account.farmers.create') }}" class="btn btn-primary">Add Farmer</a>
-                            {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                                Import Block
-                            </button> --}}
+                            @if ($role === 'block_admin')
+                                <a href="{{ route('account.farmers.create') }}" class="btn btn-primary">Add Farmer</a>
+                            @endif
                         </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
