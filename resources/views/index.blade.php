@@ -104,7 +104,7 @@
                         </div>
 
                         {{-- <button class="btn btn-main w-100 mt-2" onClick="handleLogin()">Log In</button> --}}
-                        <button type="submit" class="btn btn-main w-100 mt-2">Log In</button>
+                        <button type="submit" id="submitBtn"class="btn btn-main w-100 mt-2">Log In</button>
                         <a href="" id="createBtn" class="btn create-btn w-100 mt-3 d-none">Create New User
                             Account</a>
                     </form>

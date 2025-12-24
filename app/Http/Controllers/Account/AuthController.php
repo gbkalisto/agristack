@@ -38,7 +38,7 @@ class AuthController extends Controller
         ]);
 
         /* ---------------- CAPTCHA CHECK ---------------- */
-        if ($request->captcha !== Session::get('captcha')) {
+        if ($request->captcha !== session('captcha')) {
             return response()->json([
                 'status' => false,
                 'errors' => [
@@ -47,44 +47,46 @@ class AuthController extends Controller
             ], 422);
         }
 
-        Session::forget('captcha');
+        session()->forget('captcha');
 
         /* ---------------- IDENTIFIER ---------------- */
         $loginField = filter_var($request->username, FILTER_VALIDATE_EMAIL)
             ? 'email'
             : 'user_name';
 
-        /* ---------------- LOGIN ATTEMPT ---------------- */
-        if (Auth::guard('account')->attempt([
-            $loginField => $request->username,
-            'password'  => $request->password,
-            'status'    => 1,
-        ])) {
+        /* ---------------- USER FETCH ---------------- */
+        $user = AdminUser::where($loginField, $request->username)
+            ->where('status', 1)
+            ->first();
 
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json([
-                'status'   => true,
-                'redirect' => route('account.otp.form'), // OTP page
-            ]);
+                'status' => false,
+                'errors' => [
+                    'username' => ['Invalid credentials']
+                ]
+            ], 422);
         }
 
-        /* ---------------- INVALID CREDENTIALS ---------------- */
+        /* ---------------- OTP SESSION CONTEXT ---------------- */
+        session([
+            'otp_pending' => true,
+            'otp_guard'   => 'account',
+            'otp_user_id' => $user->id,
+        ]);
+
         return response()->json([
-            'status' => false,
-            'errors' => [
-                'username' => ['Invalid credentials']
-            ]
-        ], 422);
+            'status'   => true,
+            'redirect' => route('account.otp.form'), // OTP page
+        ]);
     }
-
-
-
 
     // send otp on registed number
     public function sendOtp(Request $request)
     {
         // 🔹 Manual validation to control JSON response
         $validator = Validator::make($request->all(), [
-            'mobile' => 'required|string',
+            'mobile' => 'required|digits:10',
         ]);
 
         if ($validator->fails()) {
@@ -93,19 +95,23 @@ class AuthController extends Controller
                 'message' => $validator->errors()->first(),
             ], 422);
         }
-        $user = AdminUser::where('mobile', $request->mobile)
-            ->where('status', 1)
-            ->first();
-
-        if (! $user) {
+        /* ---------------- SECURITY CHECK ---------------- */
+        if (session('otp_guard') !== 'account') {
             return response()->json([
                 'status'  => false,
-                'message' => 'Mobile number not found',
+                'message' => 'Unauthorized access',
+            ], 403);
+        }
+        $user = AdminUser::find(session('otp_user_id'));
+        if (!$user) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Account not found',
             ], 404);
         }
 
         /* ---------------- GENERATE OTP ---------------- */
-        // $otp = rand(100000, 999999);
+        //$otp = rand(100000, 999999);
         $otp = 100000; // For testing purpose
 
         $user->update([
@@ -116,19 +122,16 @@ class AuthController extends Controller
 
         /* ---------------- SEND OTP (SMS API) ---------------- */
         //$this->sendOtpSms($user->mobile, $otp);
-
-        /* ---------------- STORE TEMP SESSION ---------------- */
-        session([
-            'otp_account_id' => $user->id
+        return response()->json([
+            'status' => true,
+            'message' => 'OTP sent successfully'
         ]);
-
-        // return response in json
-        return response()->json(['status' => true, 'message' => 'OTP sent successfully']);
     }
 
-    // otp verification and login
+
     public function verifyOtp(Request $request)
     {
+        /* ---------------- VALIDATION ---------------- */
         try {
             $request->validate([
                 'otp' => 'required|digits:6',
@@ -136,51 +139,60 @@ class AuthController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'status'  => false,
-                'message' => $e->errors()['otp'][0] ?? 'Invalid OTP'
+                'message' => $e->errors()['otp'][0] ?? 'Invalid OTP',
             ], 422);
         }
 
-        $userId = session('otp_account_id');
-
-        if (! $userId) {
+        /* ---------------- SESSION CHECK ---------------- */
+        if (session('otp_guard') !== 'account' || ! session()->has('otp_user_id')) {
             return response()->json([
                 'status'  => false,
-                'message' => 'Session expired. Please login again.'
+                'message' => 'Session expired. Please login again.',
             ], 401);
         }
 
-        $user = AdminUser::find($userId);
+        $accountId = session('otp_user_id');
 
-        if (! $user) {
+        /* ---------------- FETCH ADMIN ---------------- */
+        $admin = AdminUser::find($accountId);
+
+        if (!$admin) {
             return response()->json([
                 'status'  => false,
-                'message' => 'User not found.'
+                'message' => 'Account not found.',
             ], 404);
         }
 
-        if (now()->gt($user->otp_expires_at)) {
+        /* ---------------- OTP EXPIRE CHECK ---------------- */
+        if (!$admin->otp_expires_at || now()->gt($admin->otp_expires_at)) {
             return response()->json([
                 'status'  => false,
-                'message' => 'OTP expired.'
+                'message' => 'OTP expired.',
             ], 422);
         }
 
-        if (! Hash::check($request->otp, $user->otp)) {
+        /* ---------------- OTP MATCH ---------------- */
+        if (!Hash::check($request->otp, $admin->otp)) {
             return response()->json([
                 'status'  => false,
-                'message' => 'Invalid OTP.'
+                'message' => 'Invalid OTP.',
             ], 422);
         }
 
-        // ✅ SUCCESS
-        $user->update([
-            'otp'             => null,
-            'otp_verified'    => true,
-            'otp_expires_at'  => null,
+        /* ---------------- SUCCESS ---------------- */
+        $admin->update([
+            'otp'            => null,
+            'otp_verified'   => true,
+            'otp_expires_at' => null,
         ]);
 
-        Auth::guard('account')->login($user);
-        session()->forget('otp_account_id');
+        Auth::guard('account')->login($admin);
+
+        session()->forget([
+            'otp_pending',
+            'otp_guard',
+            'otp_user_id',
+        ]);
 
         return response()->json([
             'status'   => true,
@@ -188,7 +200,6 @@ class AuthController extends Controller
             'redirect' => route('account.dashboard'),
         ]);
     }
-
 
 
     public function logout()

@@ -15,32 +15,46 @@ use App\Models\FarmerResidentialDetail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Division;
 
 class FarmerController extends Controller
 {
-    // protected $account;
-    // protected $role;
-    // public function __construct()
-    // {
-    //     $this->middleware(function ($request, $next) {
-    //         $this->account = auth('account')->user();
-    //         $this->role = auth('account')->user()->role;
-    //         return $next($request);
-    //     });
-    // }
+
     /* =========================
         STEP 1 – BASIC DETAILS
     ========================== */
-    public function index()
+    public function index(Request $request)
     {
-        $farmers = User::with('district','filledByAdmin')->latest()->paginate(15);
+        $farmers = User::query();
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $farmers->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('father_name', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('aadhaar', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    // 🔥 District relation search
+                    ->orWhereHas('district', function ($dq) use ($search) {
+                        $dq->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $farmers = $farmers
+            ->with('district')
+            ->latest()
+            ->paginate(15)
+            ->withQueryString(); // keep search on pagination
         return view('admin.farmer.index', compact('farmers'));
     }
 
     public function create()
     {
+        // Gate::authorize('create-farmer');
         $districts = District::all();
-        return view('account.farmer.create', compact('districts'));
+        return view('admin.farmer.create', compact('districts'));
     }
 
     public function storeBasic(Request $request)
@@ -56,6 +70,7 @@ class FarmerController extends Controller
             'name'                => $request->name,
             'father_name'         => $request->father_name,
             'phone'              => $request->mobile,
+            'email'              => $request->email,
             'aadhaar'             => $request->aadhaar,
             'dob'                 => $request->dob,
             'gender'              => $request->gender,
@@ -64,153 +79,23 @@ class FarmerController extends Controller
             'district_id'         => $request->district_id,
 
             // Tracking
-            'filled_by'           => 'admin_user',
-            'filled_by_admin_user_id'  => auth('account')->id(),
+            // 'filled_by'           => 'admin_user',
+            // 'filled_by_admin_user_id'  => auth('account')->id(),
         ]);
 
         session(['farmer_id' => $farmer->id]);
 
-        return redirect()->route('account.farmers.create.land');
+        return redirect()->route('admin.farmers.create.residential');
     }
 
     /* =========================
-        STEP 2 – LAND DETAILS
-    ========================== */
-
-    public function createLand()
-    {
-        return view('account.farmer.steps.land');
-    }
-
-    public function storeLand(Request $request)
-    {
-        $request->validate([
-            'khata_number'      => 'nullable|string',
-            'plot_numbers'      => 'nullable|string',
-            'total_land'        => 'nullable|numeric',
-            'irrigation_source' => 'nullable|string',
-            'ownership_type'    => 'nullable|string',
-        ]);
-
-        FarmerLandDetail::create([
-            'user_id'           => session('farmer_id'),
-            'khata_number'      => $request->khata_number,
-            'plot_numbers'      => $request->plot_numbers,
-            'total_land'        => $request->total_land,
-            'irrigation_source' => $request->irrigation_source,
-            'ownership_type'    => $request->ownership_type,
-        ]);
-
-        return redirect()->route('account.farmers.create.crop');
-    }
-
-    /* =========================
-        STEP 3 – CROP DETAILS
-    ========================== */
-
-    public function createCrop()
-    {
-
-        return view('account.farmer.steps.crop');
-    }
-
-    public function storeCrop(Request $request)
-    {
-        $request->validate([
-            'main_crop'      => 'required|string',
-            'secondary_crop' => 'nullable|string',
-            'season'         => 'required|string',
-        ]);
-        FarmerCropDetail::create([
-            'user_id'      => session('farmer_id'),
-            'main_crop'      => $request->main_crop,
-            'secondary_crop' => $request->secondary_crop,
-            'season'         => $request->season,
-        ]);
-
-        return redirect()->route('account.farmers.create.bank');
-    }
-
-    /* =========================
-        STEP 4 – BANK DETAILS
-    ========================== */
-
-    public function createBank()
-    {
-        return view('account.farmer.steps.bank');
-    }
-
-    public function storeBank(Request $request)
-    {
-        $request->validate([
-            'bank_name'            => 'required|string',
-            'account_holder_name'  => 'required|string',
-            'account_number'       => 'required|string',
-            'ifsc_code'            => 'required|string',
-        ]);
-
-        FarmerBankDetail::create([
-            'user_id'           => session('farmer_id'),
-            'bank_name'           => $request->bank_name,
-            'account_holder_name' => $request->account_holder_name,
-            'account_number'      => $request->account_number,
-            'ifsc_code'           => $request->ifsc_code,
-        ]);
-
-        return redirect()->route('account.farmers.create.documents');
-    }
-
-    /* =========================
-        STEP 5 – DOCUMENTS
-    ========================== */
-
-    public function createDocuments()
-    {
-        return view('account.farmer.steps.documents');
-    }
-
-    public function storeDocuments(Request $request)
-    {
-        $request->validate([
-            'aadhaar_file'  => 'required|file|mimes:pdf,jpg,jpeg,png',
-            'land_papers'  => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'bank_passbook' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'photo'        => 'nullable|image',
-        ]);
-
-        DB::transaction(function () use ($request) {
-
-            $data = ['user_id' => session('farmer_id')];
-            foreach (['aadhaar_file', 'land_papers', 'bank_passbook', 'photo'] as $file) {
-                if ($request->hasFile($file)) {
-                    $data[$file] = $request->file($file)
-                        ->store('farmers/documents', 'public');
-                }
-            }
-
-            FarmerDocument::create($data);
-
-            // Mark farmer profile completed
-            // User::where('id', session('farmer_id'))
-            //     ->update(['is_profile_completed' => true]);
-        });
-
-        // session()->forget('farmer_id');
-
-        // return redirect()
-        //     ->route('account.farmers.index')
-        //     ->with('success', 'Farmer registered successfully');
-        return redirect()->route('account.farmers.create.residential');
-    }
-
-
-    /* =========================
-        STEP 6 – Recidential DETAILS
+        STEP 2 – Recidential DETAILS
     ========================== */
 
     public function createResidential()
     {
-        return view('account.farmer.steps.residential');
+        $divisions = Division::orderBy('name')->get();
+        return view('admin.farmer.steps.residential', compact('divisions'));
     }
 
     public function storeResidential(Request $request)
@@ -237,15 +122,141 @@ class FarmerController extends Controller
                 'is_latest'        => $request->has('is_latest'),
             ]
         );
-        // Mark farmer profile completed
-        User::where('id', session('farmer_id'))
-            ->update(['is_profile_completed' => true]);
+        return redirect()->route('admin.farmers.create.land');
+    }
+
+
+    /* =========================
+        STEP 3 – LAND DETAILS
+    ========================== */
+
+    public function createLand()
+    {
+        return view('admin.farmer.steps.land');
+    }
+
+    public function storeLand(Request $request)
+    {
+        $request->validate([
+            'khata_number'      => 'nullable|string',
+            'plot_numbers'      => 'nullable|string',
+            'total_land'        => 'nullable|numeric',
+            'irrigation_source' => 'nullable|string',
+            'ownership_type'    => 'nullable|string',
+        ]);
+
+        FarmerLandDetail::create([
+            'user_id'           => session('farmer_id'),
+            'khata_number'      => $request->khata_number,
+            'plot_numbers'      => $request->plot_numbers,
+            'total_land'        => $request->total_land,
+            'irrigation_source' => $request->irrigation_source,
+            'ownership_type'    => $request->ownership_type,
+        ]);
+
+        return redirect()->route('admin.farmers.create.crop');
+    }
+
+    /* =========================
+        STEP 4 – CROP DETAILS
+    ========================== */
+
+    public function createCrop()
+    {
+
+        return view('admin.farmer.steps.crop');
+    }
+
+    public function storeCrop(Request $request)
+    {
+        $request->validate([
+            'main_crop'      => 'required|string',
+            'secondary_crop' => 'nullable|string',
+            'season'         => 'required|string',
+        ]);
+        FarmerCropDetail::create([
+            'user_id'      => session('farmer_id'),
+            'main_crop'      => $request->main_crop,
+            'secondary_crop' => $request->secondary_crop,
+            'season'         => $request->season,
+        ]);
+
+        return redirect()->route('admin.farmers.create.bank');
+    }
+
+    /* =========================
+        STEP 5 – BANK DETAILS
+    ========================== */
+
+    public function createBank()
+    {
+        return view('admin.farmer.steps.bank');
+    }
+
+    public function storeBank(Request $request)
+    {
+        $request->validate([
+            'bank_name'            => 'required|string',
+            'account_holder_name'  => 'required|string',
+            'account_number'       => 'required|string',
+            'ifsc_code'            => 'required|string',
+        ]);
+
+        FarmerBankDetail::create([
+            'user_id'           => session('farmer_id'),
+            'bank_name'           => $request->bank_name,
+            'account_holder_name' => $request->account_holder_name,
+            'account_number'      => $request->account_number,
+            'ifsc_code'           => $request->ifsc_code,
+        ]);
+
+        return redirect()->route('admin.farmers.create.documents');
+    }
+
+    /* =========================
+        STEP 6 – DOCUMENTS
+    ========================== */
+
+    public function createDocuments()
+    {
+        return view('admin.farmer.steps.documents');
+    }
+
+    public function storeDocuments(Request $request)
+    {
+        $request->validate([
+            'aadhaar_file'  => 'required|file|mimes:pdf,jpg,jpeg,png',
+            'land_papers'  => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'bank_passbook' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'photo'        => 'nullable|image',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            $data = ['user_id' => session('farmer_id')];
+            foreach (['aadhaar_file', 'land_papers', 'bank_passbook', 'photo'] as $file) {
+                if ($request->hasFile($file)) {
+                    $data[$file] = $request->file($file)
+                        ->store('farmers/documents', 'public');
+                }
+            }
+
+            FarmerDocument::create($data);
+
+            // Mark farmer profile completed
+            User::where('id', session('farmer_id'))
+                ->update(['is_profile_completed' => true]);
+        });
+
         session()->forget('farmer_id');
 
         return redirect()
-            ->route('account.farmers.index')
-            ->with('success', 'Farmer profile completed successfully');
+            ->route('admin.farmers.index')
+            ->with('success', 'Farmer registered successfully');
+        // return redirect()->route('admin.farmers.create.residential');
     }
+
+
 
     // edit and update methods would go here
 
@@ -253,6 +264,7 @@ class FarmerController extends Controller
     ######################################################
     public function edit(User $farmer)
     {
+        // Gate::authorize('manage-farmer', $farmer);
         $farmer->load([
             'district',
             'landDetail',
@@ -260,15 +272,15 @@ class FarmerController extends Controller
             'bankDetail',
             'documents',
         ]);
-
-        return view('account.farmer.edit.index', compact('farmer'));
+        return view('admin.farmer.edit.index', compact('farmer'));
     }
 
     ######################################################
 
-
+    // STEP 1
     public function editBasic(User $farmer)
     {
+        // Gate::authorize('manage-farmer', $farmer);
         $farmer->load([
             'district',
             'landDetail',
@@ -278,7 +290,7 @@ class FarmerController extends Controller
         ]);
 
         $districts = District::all();
-        return view('account.farmer.edit.index', compact('farmer', 'districts'));
+        return view('admin.farmer.edit.index', compact('farmer', 'districts'));
     }
 
     public function updateBasic(Request $request, User $farmer)
@@ -290,6 +302,7 @@ class FarmerController extends Controller
 
         $farmer->update($request->only([
             'name',
+            'email',
             'father_name',
             'dob',
             'gender',
@@ -298,14 +311,56 @@ class FarmerController extends Controller
             'district_id'
         ]));
 
-        return redirect()->route('account.farmers.edit.land', $farmer->id);
+        return redirect()->route('admin.farmers.edit.residential', $farmer->id);
     }
 
+    // STEP 2
+    public function editResidential(User $farmer)
+    {
+        // Gate::authorize('manage-farmer', $farmer);
+        $residential = FarmerResidentialDetail::firstOrNew(['user_id' => $farmer->id]);
+        $divisions = Division::orderBy('name')->get();
+
+        return view('admin.farmer.edit.steps.residential', compact('farmer', 'residential', 'divisions') + [
+            'isEdit' => true,
+            'currentStep' => 6,
+        ]);
+    }
+
+    public function updateResidential(Request $request, User $farmer)
+    {
+        $request->validate([
+            'division_id'      => 'required',
+            'district_id'  => 'required',
+            'block_id'       => 'required',
+            'village'       => 'required|string',
+            'pincode'       => 'nullable|digits:6',
+        ]);
+
+        FarmerResidentialDetail::updateOrCreate(
+            ['user_id' => $farmer->id],
+            [
+                'residential_type' => $request->residential_type,
+                'address_english'  => $request->address_english,
+                'address_local'    => $request->address_local,
+                'division_id'         => $request->division_id,
+                'district_id'         => $request->district_id,
+                'block_id'            => $request->block_id,
+                'village'          => $request->village,
+                'pincode'          => $request->pincode,
+                'is_latest'        => $request->has('is_latest'),
+            ]
+        );
+        return redirect()->route('admin.farmers.edit.land', $farmer->id);
+    }
+
+    // STEP 3
     public function editLand(User $farmer)
     {
+        // Gate::authorize('manage-farmer', $farmer);
         $land = FarmerLandDetail::firstOrNew(['user_id' => $farmer->id]);
 
-        return view('account.farmer.edit.steps.land', [
+        return view('admin.farmer.edit.steps.land', [
             'farmer' => $farmer,
             'land' => $land,
             'isEdit' => true,
@@ -326,14 +381,15 @@ class FarmerController extends Controller
             ])
         );
 
-        return redirect()->route('account.farmers.edit.crop', $farmer->id);
+        return redirect()->route('admin.farmers.edit.crop', $farmer->id);
     }
 
     public function editCrop(User $farmer)
     {
+        // Gate::authorize('manage-farmer', $farmer);
         $crop = FarmerCropDetail::firstOrNew(['user_id' => $farmer->id]);
 
-        return view('account.farmer.edit.steps.crop', compact('farmer', 'crop') + [
+        return view('admin.farmer.edit.steps.crop', compact('farmer', 'crop') + [
             'isEdit' => true,
             'currentStep' => 3,
         ]);
@@ -346,14 +402,15 @@ class FarmerController extends Controller
             $request->only(['main_crop', 'secondary_crop', 'season'])
         );
 
-        return redirect()->route('account.farmers.edit.bank', $farmer->id);
+        return redirect()->route('admin.farmers.edit.bank', $farmer->id);
     }
 
     public function editBank(User $farmer)
     {
+        // Gate::authorize('manage-farmer', $farmer);
         $bank = FarmerBankDetail::firstOrNew(['user_id' => $farmer->id]);
 
-        return view('account.farmer.edit.steps.bank', compact('farmer', 'bank') + [
+        return view('admin.farmer.edit.steps.bank', compact('farmer', 'bank') + [
             'isEdit' => true,
             'currentStep' => 4,
         ]);
@@ -371,14 +428,15 @@ class FarmerController extends Controller
             ])
         );
 
-        return redirect()->route('account.farmers.edit.documents', $farmer->id);
+        return redirect()->route('admin.farmers.edit.documents', $farmer->id);
     }
 
     public function editDocuments(User $farmer)
     {
+        // Gate::authorize('manage-farmer', $farmer);
         $documents = FarmerDocument::firstOrNew(['user_id' => $farmer->id]);
 
-        return view('account.farmer.edit.steps.documents', compact('farmer', 'documents') + [
+        return view('admin.farmer.edit.steps.documents', compact('farmer', 'documents') + [
             'isEdit' => true,
             'currentStep' => 5,
         ]);
@@ -409,50 +467,18 @@ class FarmerController extends Controller
         }
 
         $doc->save();
-
-        // return redirect()
-        //     ->route('account.farmers.index')
-        //     ->with('success', 'Documents updated successfully');
-        return redirect()->route('account.farmers.edit.residential', $farmer->id);
+        return redirect()
+            ->route('admin.farmers.index')
+            ->with('success', 'Documents updated successfully');
     }
 
-    public function editResidential(User $farmer)
+    public function destroy(string $farmer)
     {
-        $residential = FarmerResidentialDetail::firstOrNew(['user_id' => $farmer->id]);
-
-        return view('account.farmer.edit.steps.residential', compact('farmer', 'residential') + [
-            'isEdit' => true,
-            'currentStep' => 6,
-        ]);
-    }
-
-    public function updateResidential(Request $request, User $farmer)
-    {
-        $request->validate([
-            'division_id'      => 'required',
-            'district_id'  => 'required',
-            'block_id'       => 'required',
-            'village'       => 'required|string',
-            'pincode'       => 'nullable|digits:6',
-        ]);
-
-        FarmerResidentialDetail::updateOrCreate(
-            ['user_id' => $farmer->id],
-            [
-                'residential_type' => $request->residential_type,
-                'address_english'  => $request->address_english,
-                'address_local'    => $request->address_local,
-                'division_id'         => $request->division_id,
-                'district_id'         => $request->district_id,
-                'block_id'            => $request->block_id,
-                'village'          => $request->village,
-                'pincode'          => $request->pincode,
-                'is_latest'        => $request->has('is_latest'),
-            ]
-        );
+        $user = User::findOrFail($farmer);
+        $user->delete();
 
         return redirect()
-            ->route('account.farmers.index')
-            ->with('success', 'Residential details updated successfully');
+            ->route('admin.farmers.index')
+            ->with('success', 'Farmer deleted successfully.');
     }
 }

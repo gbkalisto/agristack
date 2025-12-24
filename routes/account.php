@@ -12,11 +12,20 @@ Route::middleware('guest:account')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('login.submit');
 });
 
-Route::get('otp', [AuthController::class, 'otpForm'])->name('otp.form');
-Route::post('otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
-Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
 
-Route::get('step-form', [AuthController::class, 'stepForm'])->name('stepform');
+Route::middleware('otp.pending')->group(function () {
+    Route::get('otp', [AuthController::class, 'otpForm'])->name('otp.form');
+    Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
+    Route::post('otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
+});
+
+
+
+// Route::get('otp', [AuthController::class, 'otpForm'])->name('otp.form');
+// Route::post('otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
+// Route::any('send-otp', [AuthController::class, 'sendOtp'])->name('otp.send');
+
+// Route::get('step-form', [AuthController::class, 'stepForm'])->name('stepform');
 
 // Authenticated
 Route::middleware(['auth:account', 'account'])->group(function () {
@@ -84,5 +93,6 @@ Route::middleware(['auth:account', 'account'])->group(function () {
 
         Route::get('{farmer}/edit/residential', [FarmerController::class, 'editResidential'])->name('edit.residential');
         Route::put('{farmer}/update/residential', [FarmerController::class, 'updateResidential'])->name('update.residential');
+        Route::delete('{farmer}/delete', [FarmerController::class, 'destroy'])->name('destroy');
     });
 });

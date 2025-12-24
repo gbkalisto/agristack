@@ -1,5 +1,5 @@
-@extends('account.layouts.app')
-@section('title', 'Blocks')
+@extends('admin.layouts.app')
+@section('title', 'Farmers')
 
 @section('content')
     <div class="page-content">
@@ -25,17 +25,17 @@
                         <!-- Add User Button -->
                         <!-- LEFT: Action Buttons -->
                         <div class="d-flex gap-2">
-                            <a href="{{ route('account.farmers.create') }}" class="btn btn-primary">Add Farmer</a>
+                            <a href="#" class="btn btn-primary">Add Farmer</a>
                             {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
                                 Import Block
                             </button> --}}
                         </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
-                            <input type="search" name="search" class="form-control" placeholder="Search Farmers..."
+                            <input type="search" name="search" class="form-control" placeholder="Search blocks..."
                                 value="{{ request('search') }}">
                             <button class="btn btn-outline-secondary ms-2" type="submit">Search</button>
-                            <a href="{{ route('account.farmers.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
+                            <a href="{{ route('admin.blocks.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
                         </form>
 
 
@@ -54,11 +54,15 @@
                                     <th scope="col">Category</th>
                                     <th scope="col">DOB</th>
                                     <th scope="col">District</th>
+                                    <th scope="col">Filled By</th>
                                     <th scope="col">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($farmers as $farmer)
+                                {{-- @php
+                                    dd($farmer);
+                                @endphp --}}
                                     <tr>
                                         <th scope="row"> {{ $farmer->id }} </th>
                                         <td>{{ ucfirst($farmer->name) }}</td>
@@ -66,18 +70,17 @@
                                         <td>{{ ucfirst($farmer->gender) }}</td>
                                         <td>{{ ucfirst($farmer->category) }}</td>
                                         <td>{{ ucfirst($farmer->dob) }}</td>
-                                        <td>{{ ucfirst($farmer->district->name ?? '-') }}</td>
+                                        <td>{{ ucfirst($farmer->district->name ?? '') }}</td>
+                                        <td>{{ ucfirst($farmer->filledByAdmin->name?? '') }}</td>
                                         <td>
-                                            <a href="{{ route('account.farmers.edit.basic', $farmer->id) }}"
+                                            <a href="#"
                                                 class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>
-                                            <form action="{{ route('account.farmers.destroy', $farmer->id) }}"
-                                                method="POST" class="d-inline"
-                                                onsubmit="return confirm('Are you sure you want to delete this farmer?')">
+                                            <form action="#" method="POST"
+                                                class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">
-                                                    <i class="bx bx-trash"></i>
-                                                </button>
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i
+                                                        class="bx bx-trash"></i></button>
                                             </form>
                                         </td>
                                     </tr>

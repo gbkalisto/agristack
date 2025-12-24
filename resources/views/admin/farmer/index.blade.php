@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Farmers')
+@section('title', 'Blocks')
 
 @section('content')
     <div class="page-content">
@@ -22,27 +22,17 @@
             <div class="col-xl-12 ">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                        <!-- Add User Button -->
-                        <!-- LEFT: Action Buttons -->
                         <div class="d-flex gap-2">
-                            <a href="#" class="btn btn-primary">Add Farmer</a>
-                            {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-                                Import Block
-                            </button> --}}
+                            <a href="{{ route('admin.farmers.create') }}" class="btn btn-primary">Add Farmer</a>
                         </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
-                            <input type="search" name="search" class="form-control" placeholder="Search blocks..."
+                            <input type="search" name="search" class="form-control" placeholder="Search Farmers..."
                                 value="{{ request('search') }}">
                             <button class="btn btn-outline-secondary ms-2" type="submit">Search</button>
-                            <a href="{{ route('admin.blocks.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
+                            <a href="{{ route('admin.farmers.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
                         </form>
-
-
                     </div>
-
-
-
                     <div class="card-body">
                         <table class="table mb-0 table-striped">
                             <thead>
@@ -60,9 +50,6 @@
                             </thead>
                             <tbody>
                                 @foreach ($farmers as $farmer)
-                                {{-- @php
-                                    dd($farmer);
-                                @endphp --}}
                                     <tr>
                                         <th scope="row"> {{ $farmer->id }} </th>
                                         <td>{{ ucfirst($farmer->name) }}</td>
@@ -70,23 +57,20 @@
                                         <td>{{ ucfirst($farmer->gender) }}</td>
                                         <td>{{ ucfirst($farmer->category) }}</td>
                                         <td>{{ ucfirst($farmer->dob) }}</td>
-                                        <td>{{ ucfirst($farmer->district->name) }}</td>
-                                        <td>{{ ucfirst($farmer->filledByAdmin->name) }}</td>
+                                        <td>{{ ucfirst($farmer->district->name ?? '-') }}</td>
+                                        <td>{{ ucfirst($farmer->filledByAdmin->name ?? 'Self') }}</td>
                                         <td>
-                                            <a href="#"
+                                            <a href="{{ route('admin.farmers.edit.basic', $farmer->id) }}"
                                                 class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>
-                                            <form action="#" method="POST"
-                                                class="d-inline">
+                                            <form action="{{ route('admin.farmers.destroy', $farmer->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i
                                                         class="bx bx-trash"></i></button>
                                             </form>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
-                            {{-- apply pagination  --}}
                             @if ($farmers->hasPages())
                                 <tfoot>
                                     <tr>

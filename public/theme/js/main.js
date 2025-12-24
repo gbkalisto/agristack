@@ -61,11 +61,9 @@ function setRole(role) {
     }
 }
 
-// function reloadCaptcha() {
-//     document.getElementById('captchaImage').src =
-//         "{{ route('captcha') }}?" + Date.now();
-// }
+
 function reloadCaptcha() {
+    // alert(1);
     document.getElementById('captchaImage').src =
         window.APP.captchaUrl + '?' + Date.now();
 }
@@ -82,7 +80,9 @@ $('#loginForm').on('submit', function (e) {
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-
+        beforeSend: function () {
+            $("#submitBtn").attr('disabled', true);
+        },
         success: function (res) {
             if (res.status) {
                 // BOTH farmer & admin handled here
@@ -94,6 +94,7 @@ $('#loginForm').on('submit', function (e) {
             let res = xhr.responseJSON;
 
             if (res?.errors) {
+                $("#submitBtn").attr('disabled', false);
                 $.each(res.errors, function (field, messages) {
                     let input = $('[name="' + field + '"]');
                     input.addClass('is-invalid');
@@ -105,12 +106,15 @@ $('#loginForm').on('submit', function (e) {
                     message: 'Please fix the highlighted errors',
                     position: 'topRight'
                 });
+
             } else {
+                $("#submitBtn").attr('disabled', false);
                 iziToast.error({
                     title: 'Error',
                     message: res?.message || 'Login failed',
                     position: 'topRight'
                 });
+
             }
 
             reloadCaptcha();

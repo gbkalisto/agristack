@@ -33,18 +33,60 @@ class FarmerController extends Controller
     /* =========================
         STEP 1 – BASIC DETAILS
     ========================== */
-    public function index()
+    // public function index(Request $request)
+    // {
+    //     $farmers = User::query();
+    //     if ($this->role == 'block_admin') {
+    //         $farmers->where('filled_by_admin_user_id', $this->account->id);
+    //     }
+    //     $farmers = $farmers->with('district')->latest()->paginate(15);
+    //     return view('account.farmer.index', compact('farmers'));
+    // }
+
+    public function index(Request $request)
     {
         $farmers = User::query();
-        if ($this->role == 'block_admin') {
+
+        /* ---------------------------------
+       Role-based restriction
+    ----------------------------------*/
+        if ($this->role === 'block_admin') {
             $farmers->where('filled_by_admin_user_id', $this->account->id);
         }
-        $farmers = $farmers->with('district')->latest()->paginate(15);
+
+        /* ---------------------------------
+       Search filter
+       (?search=...)
+    ----------------------------------*/
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $farmers->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('father_name', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('aadhaar', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    // 🔥 District relation search
+                    ->orWhereHas('district', function ($dq) use ($search) {
+                        $dq->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $farmers = $farmers
+            ->with('district')
+            ->latest()
+            ->paginate(15)
+            ->withQueryString(); // keep search on pagination
+
         return view('account.farmer.index', compact('farmers'));
     }
 
+
     public function create()
     {
+        // Gate::authorize('create-farmer');
         $districts = District::all();
         return view('account.farmer.create', compact('districts'));
     }
@@ -264,6 +306,7 @@ class FarmerController extends Controller
     ######################################################
     public function edit(User $farmer)
     {
+        Gate::authorize('manage-farmer', $farmer);
         $farmer->load([
             'district',
             'landDetail',
@@ -271,8 +314,6 @@ class FarmerController extends Controller
             'bankDetail',
             'documents',
         ]);
-        Gate::authorize('manage-farmer', $farmer);
-
         return view('account.farmer.edit.index', compact('farmer'));
     }
 
@@ -471,5 +512,14 @@ class FarmerController extends Controller
         return redirect()
             ->route('account.farmers.index')
             ->with('success', 'Documents updated successfully');
+    }
+
+    public function destroy(User $farmer)
+    {
+        Gate::authorize('manage-farmer', $farmer);
+        $farmer->delete();
+        return redirect()
+            ->route('account.farmers.index')
+            ->with('success', 'Farmer deleted successfully.');
     }
 }

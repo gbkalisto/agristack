@@ -44,7 +44,16 @@ class AppServiceProvider extends ServiceProvider
 
         // Authorization Gate
         Gate::define('manage-farmer', function ($admin, User $farmer) {
-            return $farmer->filled_by_admin_user_id === $admin->id;
+            // return $farmer->filled_by_admin_user_id === $admin->id;
+            return
+                // ✅ role must be block_admin
+                $admin->role === 'block_admin'
+
+                // ✅ farmer must be created by admin
+                && $farmer->filled_by === 'admin_user'
+
+                // ✅ admin must be the creator
+                && $farmer->filled_by_admin_user_id === $admin->id;
         });
     }
 }

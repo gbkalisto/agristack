@@ -36,16 +36,21 @@
                                   <!--navigation-->
                                   <ul class="metismenu" id="menu">
 
-                                      @can('view dashboard')
-                                          <li>
-                                              <a href="{{ route('admin.dashboard') }}">
-                                                  <div class="parent-icon"><i class="bx bx-home-alt"></i>
-                                                  </div>
-                                                  <div class="menu-title">Dashboard</div>
-                                              </a>
-                                          </li>
-                                      @endcan
-                                      {{-- @can('view profile') --}}
+
+                                      <li>
+                                          <a href="{{ route('admin.dashboard') }}">
+                                              <div class="parent-icon"><i class="bx bx-home-alt"></i>
+                                              </div>
+                                              <div class="menu-title">Dashboard</div>
+                                          </a>
+                                      </li>
+                                      <li>
+                                          <a href="{{ route('admin.farmers.index') }}">
+                                              <div class="parent-icon"><i class="bx bx-message-square-edit"></i>
+                                              </div>
+                                              <div class="menu-title">Farmer registry</div>
+                                          </a>
+                                      </li>
                                       <li>
                                           <a href="{{ route('admin.profile') }}">
                                               <div class="parent-icon"><i class="bx bx-user-circle"></i>
@@ -70,7 +75,7 @@
                                           </a>
                                       </li>
                                       @endcan --}}
-                                      {{-- @can('view settings') --}}
+
                                       <li>
                                           <a href="{{ route('admin.settings.index') }}">
                                               <div class="parent-icon"><i class="bx bx-cog"></i>
@@ -78,15 +83,15 @@
                                               <div class="menu-title">Settings</div>
                                           </a>
                                       </li>
-                                      {{-- @endcan --}}
-                                      {{-- @if ($admin && ($admin->can('view admins') || $admin->can('view roles') || $admin->can('view permissions'))) --}}
+
+
                                       <li class="">
                                           <a href="javascript:;" class="has-arrow" aria-expanded="false">
                                               <div class="parent-icon"><i class="bx bx-id-card"></i></div>
                                               <div class="menu-title">Admin</div>
                                           </a>
                                           <ul class="mm-collapse" style="height: 0px;">
-                                              {{-- @can('view admins') --}}
+
                                               <li>
                                                   <a href="{{ route('admin.divisions.index') }}">
                                                       <i class="bx bx-radio-circle"></i>Divisions
@@ -107,7 +112,7 @@
                                                       <i class="bx bx-radio-circle"></i>Admins
                                                   </a>
                                               </li>
-                                              {{-- @endcan --}}
+
 
                                           </ul>
                                       </li>
