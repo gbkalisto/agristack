@@ -3,17 +3,12 @@
 
 @section('content')
     <div class="page-content">
-
         @include('admin.farmer.stepper', ['currentStep' => 6])
-
         <div class="card">
             <form method="POST" action="{{ route('admin.farmers.update.documents', $farmer->id) }}"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-{{-- @php
-    dd($documents);
-@endphp --}}
                 <div class="card-body p-4">
 
                     <h6 class="text-primary fw-bold mb-4">Edit Documents</h6>

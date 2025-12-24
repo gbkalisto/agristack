@@ -125,7 +125,6 @@ class FarmerController extends Controller
         return redirect()->route('admin.farmers.create.land');
     }
 
-
     /* =========================
         STEP 3 – LAND DETAILS
     ========================== */
@@ -225,26 +224,42 @@ class FarmerController extends Controller
     public function storeDocuments(Request $request)
     {
         $request->validate([
-            'aadhaar_file'  => 'required|file|mimes:pdf,jpg,jpeg,png',
-            'land_papers'  => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'bank_passbook' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'photo'        => 'nullable|image',
+            'aadhaar_file'   => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'land_papers'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'bank_passbook'  => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'photo'          => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $farmerId = session('farmer_id');
 
-            $data = ['user_id' => session('farmer_id')];
-            foreach (['aadhaar_file', 'land_papers', 'bank_passbook', 'photo'] as $file) {
+        DB::transaction(function () use ($request, $farmerId) {
+
+            $basePath = "farmers/documents/{$farmerId}";
+            $data = ['user_id' => $farmerId];
+
+            $files = [
+                'aadhaar_file',
+                'land_papers',
+                'bank_passbook',
+                'photo',
+            ];
+
+            foreach ($files as $file) {
                 if ($request->hasFile($file)) {
+
+                    $extension = $request->file($file)->getClientOriginalExtension();
+
+                    // Unique & readable filename
+                    $fileName = $file . '_' . time() . '_' . uniqid() . '.' . $extension;
+
                     $data[$file] = $request->file($file)
-                        ->store('farmers/documents', 'public');
+                        ->storeAs($basePath, $fileName, 'public');
                 }
             }
 
             FarmerDocument::create($data);
 
-            // Mark farmer profile completed
-            User::where('id', session('farmer_id'))
+            User::where('id', $farmerId)
                 ->update(['is_profile_completed' => true]);
         });
 
@@ -253,34 +268,13 @@ class FarmerController extends Controller
         return redirect()
             ->route('admin.farmers.index')
             ->with('success', 'Farmer registered successfully');
-        // return redirect()->route('admin.farmers.create.residential');
     }
-
-
 
     // edit and update methods would go here
-
-
-    ######################################################
-    public function edit(User $farmer)
-    {
-        // Gate::authorize('manage-farmer', $farmer);
-        $farmer->load([
-            'district',
-            'landDetail',
-            'cropDetail',
-            'bankDetail',
-            'documents',
-        ]);
-        return view('admin.farmer.edit.index', compact('farmer'));
-    }
-
-    ######################################################
 
     // STEP 1
     public function editBasic(User $farmer)
     {
-        // Gate::authorize('manage-farmer', $farmer);
         $farmer->load([
             'district',
             'landDetail',
@@ -295,6 +289,7 @@ class FarmerController extends Controller
 
     public function updateBasic(Request $request, User $farmer)
     {
+
         $request->validate([
             'name' => 'required',
             'district_id' => 'required|exists:districts,id',
@@ -310,7 +305,6 @@ class FarmerController extends Controller
             'address',
             'district_id'
         ]));
-
         return redirect()->route('admin.farmers.edit.residential', $farmer->id);
     }
 
@@ -444,37 +438,77 @@ class FarmerController extends Controller
 
     public function updateDocuments(Request $request, $id)
     {
+        $request->validate([
+            'aadhaar_file'   => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'land_papers'    => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'bank_passbook'  => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'photo'          => 'nullable|image|mimes:jpg,jpeg,png|max:1024',
+        ]);
+
         $farmer = User::findOrFail($id);
 
         $doc = FarmerDocument::firstOrCreate([
             'user_id' => $farmer->id
         ]);
 
-        $files = ['aadhaar_file', 'land_papers', 'bank_passbook', 'photo'];
+        $basePath = "farmers/documents/{$farmer->id}";
+
+        $files = [
+            'aadhaar_file',
+            'land_papers',
+            'bank_passbook',
+            'photo',
+        ];
 
         foreach ($files as $file) {
             if ($request->hasFile($file)) {
 
-                // Delete old file if exists
-                if ($doc->$file && Storage::disk('public')->exists($doc->$file)) {
+                // 🔥 Delete old file if exists
+                if (!empty($doc->$file) && Storage::disk('public')->exists($doc->$file)) {
                     Storage::disk('public')->delete($doc->$file);
                 }
 
-                // Store new file
+                // 🔥 Generate unique filename
+                $extension = $request->file($file)->getClientOriginalExtension();
+                $fileName = $file . '_' . time() . '_' . uniqid() . '.' . $extension;
+
+                // 🔥 Store new file farmer-wise
                 $doc->$file = $request->file($file)
-                    ->store('farmers/documents', 'public');
+                    ->storeAs($basePath, $fileName, 'public');
             }
         }
 
         $doc->save();
+
         return redirect()
             ->route('admin.farmers.index')
             ->with('success', 'Documents updated successfully');
     }
 
+
     public function destroy(string $farmer)
     {
         $user = User::findOrFail($farmer);
+
+        $documents = FarmerDocument::where('user_id', $user->id)->first();
+
+        if ($documents) {
+            foreach (['aadhaar_file', 'land_papers', 'bank_passbook', 'photo'] as $field) {
+
+                if (!empty($documents->$field)) {
+
+                    // ✅ IMPORTANT: use exact DB path
+                    if (Storage::disk('public')->exists($documents->$field)) {
+                        Storage::disk('public')->delete($documents->$field);
+                    }
+                }
+            }
+        }
+
+        // ✅ Delete the farmer folder AFTER files
+        Storage::disk('public')->deleteDirectory("farmers/documents/{$user->id}");
+
+        // ✅ Delete farmer (DB cascade will handle documents table)
         $user->delete();
 
         return redirect()

@@ -7,7 +7,7 @@
         @include('admin.farmer.stepper', ['currentStep' => 6])
 
         <div class="card">
-            <form method="POST" action="{{ route('admin.farmers.store.documents') }}" enctype="multipart/form-data">
+            {{-- <form method="POST" action="{{ route('admin.farmers.store.documents') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body p-4">
 
@@ -50,6 +50,104 @@
 
                     <div class="text-end">
                         <button class="btn btn-success px-4">Submit Farmer Profile</button>
+                    </div>
+
+                </div>
+            </form> --}}
+
+            <form method="POST" action="{{ route('admin.farmers.store.documents') }}" enctype="multipart/form-data">
+                @csrf
+
+                <div class="card-body p-4">
+
+                    <h6 class="text-primary fw-bold mb-3">Documents Upload</h6>
+
+                    {{-- Aadhaar Card --}}
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">
+                            Aadhaar Card <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="file" name="aadhaar_file"
+                                class="form-control @error('aadhaar_file') is-invalid @enderror"
+                                accept=".pdf,.jpg,.jpeg,.png" required>
+
+                            <small class="text-muted">
+                                Allowed: PDF / JPG / PNG · Max size: 2MB
+                            </small>
+
+                            @error('aadhaar_file')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Land Papers --}}
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Land Papers</label>
+                        <div class="col-sm-9">
+                            <input type="file" name="land_papers"
+                                class="form-control @error('land_papers') is-invalid @enderror"
+                                accept=".pdf,.jpg,.jpeg,.png">
+
+                            <small class="text-muted">
+                                Allowed: PDF / JPG / PNG · Max size: 2MB
+                            </small>
+
+                            @error('land_papers')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Bank Passbook --}}
+                    <div class="row mb-3">
+                        <label class="col-sm-3 col-form-label">Bank Passbook</label>
+                        <div class="col-sm-9">
+                            <input type="file" name="bank_passbook"
+                                class="form-control @error('bank_passbook') is-invalid @enderror"
+                                accept=".pdf,.jpg,.jpeg,.png">
+
+                            <small class="text-muted">
+                                Allowed: PDF / JPG / PNG · Max size: 2MB
+                            </small>
+
+                            @error('bank_passbook')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Passport Photo --}}
+                    <div class="row mb-4">
+                        <label class="col-sm-3 col-form-label">Passport Photo</label>
+                        <div class="col-sm-9">
+                            <input type="file" name="photo" class="form-control @error('photo') is-invalid @enderror"
+                                accept="image/jpeg,image/png">
+
+                            <small class="text-muted">
+                                JPG / PNG only · Max size: 1MB
+                            </small>
+
+                            @error('photo')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    {{-- Declaration --}}
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="declaration" required>
+                        <label class="form-check-label" for="declaration">
+                            I declare that the information provided is correct.
+                        </label>
+                    </div>
+
+                    {{-- Submit --}}
+                    <div class="text-end">
+                        <button class="btn btn-success px-4">
+                            Submit Farmer Profile
+                        </button>
                     </div>
 
                 </div>

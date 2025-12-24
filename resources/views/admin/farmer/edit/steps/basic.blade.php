@@ -1,11 +1,11 @@
-<form method="POST" action="{{ route('account.farmers.update.basic', $farmer->id) }}">
+<form method="POST" action="{{ route('admin.farmers.update.basic', $farmer->id) }}">
     @csrf
     @method('PUT')
 
     <div class="card">
         <div class="card-body p-4">
 
-            <h6 class="fw-bold text-primary mb-3">Edit Basic Details</h6>
+            <h6 class="fw-bold text-primary mb-3">Edit Basic Details </h6>
 
             {{-- Farmer Name --}}
             <div class="row mb-3">
