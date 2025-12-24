@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--favicon-->
-    <link rel="icon" href="{{ $settings['favicon'] ?? asset('theme/images/favicon-32x32.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('img/agristack-favicon.png') }}" type="image/png">
     <!--plugins-->
     <link href="{{ asset('theme') }}/plugins/simplebar/css/simplebar.css" rel="stylesheet">
     <link href="{{ asset('theme') }}/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">
@@ -29,35 +29,19 @@
 </head>
 
 <body class="">
-    <!--wrapper-->
     <div class="wrapper">
-        <div class="section-authentication-cover">
-            <div class="">
-                <div class="row g-0">
-
-                    <div
-                        class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex">
-
-                        <div class="card shadow-none bg-transparent shadow-none rounded-0 mb-0">
+        <div class="section-authentication-signin d-flex align-items-center justify-content-center my-5 my-lg-0">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3">
+                    <div class="col mx-auto">
+                        <div class="card mb-0">
                             <div class="card-body">
-                                <img src="{{ asset('theme') }}/images/login-images/login-cover.svg"
-                                    class="img-fluid auth-img-cover-login" width="650" alt="" />
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right align-items-center justify-content-center">
-                        <div class="card rounded-0 m-3 shadow-none bg-transparent mb-0">
-                            <div class="card-body p-sm-5">
-                                <div class="">
-
-                                    {{-- <div class="mb-3 text-center">
-                                        <img src="{{ $settings['logo'] ? asset('storage') . '/' . $settings['logo'] : asset('theme/images/logo-icon.png') }}"
-                                            width="50%" alt="">
-                                    </div> --}}
+                                <div class="p-4">
+                                    <div class="mb-3 text-center">
+                                        <img src="{{ asset('img/agristacklogo.png') }}" width="100"
+                                            alt="Logo" />
+                                    </div>
                                     <div class="text-center mb-4">
-                                        {{-- <h5 class="">{{ $settings['site_name'] ?? 'Admin Panel' }}'s Admin</h5> --}}
                                         <p class="mb-0">Please log in to your account</p>
                                     </div>
                                     <div class="form-body">
@@ -85,7 +69,7 @@
                                                     </div>
                                                 @enderror
                                             </div>
-                                             @php
+                                            @php
                                                 $prefilledPassword = old('password');
                                                 if (!$prefilledPassword && Cookie::has('admin_password')) {
                                                     try {
@@ -100,8 +84,7 @@
                                                 <div class="input-group" id="show_hide_password">
                                                     <input type="password" name="password"
                                                         class="form-control @error('password') is-invalid @enderror"
-                                                        id="bsValidation5"
-                                                        value="{{ $prefilledPassword }}"
+                                                        id="bsValidation5" value="{{ $prefilledPassword }}"
                                                         placeholder="Enter Password" required>
                                                     <a href="javascript:;" class="input-group-text bg-transparent"
                                                         id="bsValidation5"><i class='bx bx-hide'></i>
@@ -114,7 +97,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="form-check form-switch">
+                                                <div class="form-check form-switch form-check-success">
                                                     <input class="form-check-input" name="remember" type="checkbox"
                                                         id="flexSwitchCheckChecked"
                                                         {{ $prefilledEmail ? 'checked' : '' }}>
@@ -123,46 +106,19 @@
                                                         for="flexSwitchCheckChecked">Remember Me</label>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 text-end"> <a
-                                                    href="auth-cover-forgot-password.html">Forgot Password ?</a>
+                                            <div class="col-md-6 text-end"> <a href="#">Forgot Password ?</a>
                                             </div>
                                             <div class="col-12">
                                                 <div class="d-grid">
-                                                    <button type="submit" class="btn btn-primary">Sign in</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="text-center ">
-                                                    <p class="mb-0">Don't have an account yet? <a
-                                                            href="auth-cover-signup.html">Sign up here</a>
-                                                    </p>
+                                                    <button type="submit" class="btn btn-success">Sign in</button>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="login-separater text-center mb-5"> <span>OR SIGN IN WITH</span>
-                                        <hr>
-                                    </div>
-                                    <div class="list-inline contacts-social text-center">
-                                        <a href="javascript:;"
-                                            class="list-inline-item bg-facebook text-white border-0 rounded-3"><i
-                                                class="bx bxl-facebook"></i></a>
-                                        <a href="javascript:;"
-                                            class="list-inline-item bg-twitter text-white border-0 rounded-3"><i
-                                                class="bx bxl-twitter"></i></a>
-                                        <a href="javascript:;"
-                                            class="list-inline-item bg-google text-white border-0 rounded-3"><i
-                                                class="bx bxl-google"></i></a>
-                                        <a href="javascript:;"
-                                            class="list-inline-item bg-linkedin text-white border-0 rounded-3"><i
-                                                class="bx bxl-linkedin"></i></a>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <!--end row-->
             </div>
