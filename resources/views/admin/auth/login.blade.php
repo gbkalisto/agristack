@@ -38,8 +38,7 @@
                             <div class="card-body">
                                 <div class="p-4">
                                     <div class="mb-3 text-center">
-                                        <img src="{{ asset('img/agristacklogo.png') }}" width="100"
-                                            alt="Logo" />
+                                        <img src="{{ asset('img/agristacklogo.png') }}" style="width:50%" alt="Logo" />
                                     </div>
                                     <div class="text-center mb-4">
                                         <p class="mb-0">Please log in to your account</p>
