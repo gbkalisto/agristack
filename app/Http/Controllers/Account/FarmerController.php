@@ -33,31 +33,21 @@ class FarmerController extends Controller
     /* =========================
         STEP 1 – BASIC DETAILS
     ========================== */
-    // public function index(Request $request)
-    // {
-    //     $farmers = User::query();
-    //     if ($this->role == 'block_admin') {
-    //         $farmers->where('filled_by_admin_user_id', $this->account->id);
-    //     }
-    //     $farmers = $farmers->with('district')->latest()->paginate(15);
-    //     return view('account.farmer.index', compact('farmers'));
-    // }
-
     public function index(Request $request)
     {
         $farmers = User::query();
 
         /* ---------------------------------
        Role-based restriction
-    ----------------------------------*/
+        ----------------------------------*/
         if ($this->role === 'block_admin') {
             $farmers->where('filled_by_admin_user_id', $this->account->id);
         }
 
         /* ---------------------------------
-       Search filter
-       (?search=...)
-    ----------------------------------*/
+        Search filter
+        (?search=...)
+        ----------------------------------*/
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -86,7 +76,7 @@ class FarmerController extends Controller
 
     public function create()
     {
-        // Gate::authorize('create-farmer');
+        Gate::authorize('create-farmer');
         $districts = District::all();
         return view('account.farmer.create', compact('districts'));
     }
