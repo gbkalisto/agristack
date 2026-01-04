@@ -19,7 +19,23 @@ use App\Models\Division;
 
 class FarmerController extends Controller
 {
-
+    // show Farmer details
+    public function show($id)
+    {
+        $farmer = User::with([
+            'district',
+            'landDetail',
+            'cropDetail',
+            'bankDetail',
+            'documents',
+            'residentialDetail',
+            'residentialDetail.division',
+            'residentialDetail.district',
+            'residentialDetail.block',
+        ])->findOrFail($id);
+        // dd($farmer);
+        return view('admin.farmer.show', compact('farmer'));
+    }
     /* =========================
         STEP 1 – BASIC DETAILS
     ========================== */

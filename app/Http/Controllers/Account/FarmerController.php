@@ -41,9 +41,9 @@ class FarmerController extends Controller
             'bankDetail',
             'documents',
             'residentialDetail',
-            // 'residentialDetail.division',
-            // 'residentialDetail.district',
-            // 'residentialDetail.block',
+            'residentialDetail.division',
+            'residentialDetail.district',
+            'residentialDetail.block',
         ])->findOrFail($id);
         return view('account.farmer.show', compact('farmer'));
     }

@@ -26,6 +26,7 @@ class AccountController extends Controller
     public function index(Request $request)
     {
         $currentAccount = Auth::guard('account')->user();
+
         $keyword = $request->input('search');
 
         $accounts = AdminUser::query();
@@ -60,7 +61,7 @@ class AccountController extends Controller
             });
         }
 
-        $accounts = $accounts
+        $accounts = $accounts->where('id', '!=', $currentAccount->id) // Exclude current account
             ->with(['district', 'division'])
             ->paginate(10)
             ->withQueryString(); // keeps search term during pagination

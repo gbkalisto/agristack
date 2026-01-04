@@ -80,6 +80,7 @@ Route::middleware('auth:admin')->group(function () {
     //  });
     // Farmer Routes
     Route::prefix('farmers')->name('farmers.')->group(function () {
+        Route::get('/{id}/show', [FarmerController::class, 'show'])->name('show');
         // LIST
         Route::get('/', [FarmerController::class, 'index'])
             ->name('index');

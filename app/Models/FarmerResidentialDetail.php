@@ -26,4 +26,22 @@ class FarmerResidentialDetail extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // 🔹 Division relation
+    public function division()
+    {
+        return $this->belongsTo(Division::class, 'division_id');
+    }
+
+    // 🔹 District relation
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    // 🔹 Block relation
+    public function block()
+    {
+        return $this->belongsTo(Block::class, 'block_id');
+    }
 }
