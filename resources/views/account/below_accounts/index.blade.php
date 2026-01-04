@@ -2,7 +2,9 @@
 @section('title', 'Blocks')
 
 @section('content')
-
+    @php
+        $role = auth('account')->user()->role;
+    @endphp
     <div class="page-content">
         <!--breadcrumb-->
         <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -12,7 +14,7 @@
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Farmers</li>
+                        <li class="breadcrumb-item active" aria-current="page">Below Accounts</li>
                     </ol>
                 </nav>
             </div>
@@ -32,75 +34,64 @@
                         </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
-                            <input type="search" name="search" class="form-control" placeholder="Search Farmers..."
+                            <input type="search" name="search" class="form-control" placeholder="Search Accounts..."
                                 value="{{ request('search') }}">
                             <button class="btn btn-outline-secondary ms-2" type="submit">Search</button>
-                            <a href="{{ route('account.farmers.index') }}" class="btn btn-outline-danger ms-2">Reset</a>
+                            <a href="{{ route('account.below.accounts') }}" class="btn btn-outline-danger ms-2">Reset</a>
                         </form>
 
 
                     </div>
-
-
-                    @php
-                        $checkRole = auth('account')->user()->role;
-                    @endphp
                     <div class="card-body">
                         <table class="table mb-0 table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">Id</th>
                                     <th scope="col">Name</th>
+                                    <th scope="col">Username</th>
+                                    <th scope="col">Email</th>
                                     <th scope="col">Phone</th>
-                                    <th scope="col">Gender</th>
-                                    <th scope="col">Category</th>
-                                    <th scope="col">DOB</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Division</th>
                                     <th scope="col">District</th>
-                                    {{-- @if ($checkRole == 'black_admin') --}}
-                                    <th scope="col">Options</th>
-                                    {{-- @endif --}}
+                                    <th scope="col">Block</th>
+
 
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($farmers as $farmer)
+                                @foreach ($accounts as $account)
                                     <tr>
-                                        <th scope="row"> {{ $farmer->id }} </th>
-                                        <td>{{ ucfirst($farmer->name) }}</td>
-                                        <td>{{ $farmer->phone }}</td>
-                                        <td>{{ ucfirst($farmer->gender) }}</td>
-                                        <td>{{ ucfirst($farmer->category) }}</td>
-                                        <td>{{ ucfirst($farmer->dob) }}</td>
-                                        <td>{{ ucfirst($farmer->district->name ?? '-') }}</td>
-
+                                        <th scope="row"> {{ $account->id }} </th>
+                                        <td>{{ ucfirst($account->name) }}</td>
+                                        <td>{{ $account->user_name }}</td>
+                                        <td>{{ $account->email }}</td>
+                                        <td>{{ $account->mobile }}</td>
                                         <td>
-                                            <a href="{{ route('account.farmers.show', $farmer->id) }}"
-                                                class="btn btn-success btn-sm" title="View Form Details">View</a>
-                                            @if ($checkRole == 'block_admin')
-                                                <a href="{{ route('account.farmers.edit.basic', $farmer->id) }}"
-                                                    class="btn btn-sm btn-primary" title="Edit"><i
-                                                        class="bx bx-edit"></i></a>
-                                                <form action="{{ route('account.farmers.destroy', $farmer->id) }}"
-                                                    title="Delete" method="POST" class="d-inline"
-                                                    onsubmit="return confirm('Are you sure you want to delete this farmer?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">
-                                                        <i class="bx bx-trash"></i>
-                                                    </button>
-                                                </form>
+                                            @if ($account->role == 'Admin')
+                                                <span class="badge bg-primary">Admin</span>
+                                            @elseif($account->role == 'block_admin')
+                                                <span class="badge bg-secondary">Block Admin</span>
+                                            @elseif($account->role == 'district_admin')
+                                                <span class="badge bg-success">District Admin</span>
+                                            @elseif($account->role == 'division_admin')
+                                                <span class="badge bg-warning text-dark">Division Admin</span>
+                                            @else
+                                                <span class="badge bg-info text-dark">{{ $account->role }}</span>
                                             @endif
                                         </td>
-
+                                        <td>{{ ucfirst($account->division->name ?? '-') }}</td>
+                                        <td>{{ ucfirst($account->district->name ?? '-') }}</td>
+                                        <td>{{ ucfirst($account->block->name ?? '-') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             {{-- apply pagination  --}}
-                            @if ($farmers->hasPages())
+                            @if ($accounts->hasPages())
                                 <tfoot>
                                     <tr>
                                         <td colspan="6">
-                                            {{ $farmers->links('pagination::bootstrap-5') }}
+                                            {{ $accounts->links('pagination::bootstrap-5') }}
                                         </td>
                                     </tr>
                                 </tfoot>

@@ -28,10 +28,10 @@
                                     <div class="d-flex flex-column align-items-center text-center">
                                         @if ($admin->profile_picture)
                                             <img src="{{ asset('storage/' . $admin->profile_picture) }}" alt="Admin"
-                                                class="rounded-circle p-1 bg-primary" width="110">
+                                                class="rounded-square p-1 bg-primary" width="110">
                                         @else
                                             <img src="{{ asset('theme') }}/images/avatars/avatar-2.png" alt="Admin"
-                                                class="rounded-circle p-1 bg-primary" width="110">
+                                                class="rounded-square p-1 bg-primary" width="110">
                                         @endif
                                         <div class="mt-3">
                                             <h4>{{ $admin->name }}</h4>
@@ -115,7 +115,11 @@
                                                 <h6 class="mb-0">Password</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" value="********">
+                                                <div class="input-group mb-3">
+                                                    <input type="password" name="password" class="form-control" placeholder="Password">
+                                                    <span class="input-group-text" id="basic-addon2"><i class='bx bx-hide'
+                                                            id="togglePassword"></i></span>
+                                                </div>
                                                 <small class="text-danger">leave blank if you do not want to update</small>
                                             </div>
                                         </div>
@@ -200,6 +204,20 @@
     </div>
     @push('scripts')
         <script>
+            $("#togglePassword").click(function(e) {
+                e.preventDefault();
+                const passwordField = $(this).closest('.input-group').find('input');
+                const icon = $(this);
+
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                    icon.removeClass('bx-hide').addClass('bx-show');
+                } else {
+                    passwordField.attr('type', 'password');
+                    icon.removeClass('bx-show').addClass('bx-hide');
+                }
+            })
+
             document.addEventListener('DOMContentLoaded', function() {
                 const form = document.getElementById('disable2faForm');
                 if (!form) return;

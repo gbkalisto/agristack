@@ -24,13 +24,12 @@
              <div class="user-box dropdown px-3">
                  <a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
                      href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-
-                     {{-- @if (auth('admin')->user()->profile_picture)
-                         <img src="{{ asset('storage/' . auth('admin')->user()->profile_picture) }}" class="user-img"
+                     @if (auth('account')->user()->profile_picture)
+                         <img src="{{ asset('storage/' . auth('account')->user()->profile_picture) }}" class="user-img"
                              alt="user avatar">
-                     @else --}}
-                     <img src="{{ asset('theme') }}/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
-                     {{-- @endif --}}
+                     @else
+                         <img src="{{ asset('theme') }}/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
+                     @endif
                      <div class="user-info">
                          <p class="user-name mb-0">{{ auth('account')->user()->name }}</p>
                          <p class="designattion mb-0">

@@ -60,9 +60,12 @@
                                         <td>{{ ucfirst($farmer->district->name ?? '-') }}</td>
                                         <td>{{ ucfirst($farmer->filledByAdmin->name ?? 'Self') }}</td>
                                         <td>
+                                            <a href="#" class="btn btn-success btn-sm"
+                                                title="View Form Details">View</a>
                                             <a href="{{ route('admin.farmers.edit.basic', $farmer->id) }}"
                                                 class="btn btn-sm btn-primary" title="Edit"><i class="bx bx-edit"></i></a>
-                                            <form action="{{ route('admin.farmers.destroy', $farmer->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.farmers.destroy', $farmer->id) }}" method="POST"
+                                                class="d-inline" title="Delete">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i

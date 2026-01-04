@@ -28,10 +28,10 @@
                                     <div class="d-flex flex-column align-items-center text-center">
                                         @if ($account->profile_picture)
                                             <img src="{{ asset('storage/' . $account->profile_picture) }}" alt="Admin"
-                                                class="rounded-circle p-1 bg-primary" width="110">
+                                                class="rounded-square p-1 bg-primary" width="110">
                                         @else
                                             <img src="{{ asset('theme') }}/images/avatars/avatar-2.png" alt="Admin"
-                                                class="rounded-circle p-1 bg-primary" width="110">
+                                                class="rounded-square p-1 bg-primary" width="110">
                                         @endif
                                         <div class="mt-3">
                                             <h4>{{ $account->name }}</h4>
@@ -47,7 +47,7 @@
                         <div class="col-lg-8">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="#" method="POST"
+                                    <form action="{{ route('account.profile.update', $account->id) }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="row mb-3">
@@ -106,23 +106,29 @@
                                             </div>
                                         </div>
 
-                                        <div class="row mb-3">
+                                        {{-- <div class="row mb-3">
                                             <div class="col-sm-3">
                                                 <h6 class="mb-0">Role</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
                                                 <select name="role" id="role" class="form-control ">
-                                                    <option value="admin" {{ $account->role == 'admin' ? 'selected' : '' }}>Admin
+                                                    <option value="admin"
+                                                        {{ $account->role == 'admin' ? 'selected' : '' }}>Admin
                                                     </option>
-                                                    <option value="division_admin" {{ $account->role == 'division_admin' ? 'selected' : '' }}>Division Admin
+                                                    <option value="division_admin"
+                                                        {{ $account->role == 'division_admin' ? 'selected' : '' }}>Division
+                                                        Admin
                                                     </option>
-                                                    <option value="district_admin" {{ $account->role == 'district_admin' ? 'selected' : '' }}>District Admin
+                                                    <option value="district_admin"
+                                                        {{ $account->role == 'district_admin' ? 'selected' : '' }}>District
+                                                        Admin
                                                     </option>
-                                                    <option value="block_admin" {{ $account->role == 'block_admin' ? 'selected' : '' }}>Block
+                                                    <option value="block_admin"
+                                                        {{ $account->role == 'block_admin' ? 'selected' : '' }}>Block
                                                         Admin</option>
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="row mb-3">
                                             <div class="col-sm-3">
                                                 <h6 class="mb-0">Profile picture</h6>
@@ -137,7 +143,12 @@
                                                 <h6 class="mb-0">Password</h6>
                                             </div>
                                             <div class="col-sm-9 text-secondary">
-                                                <input type="text" class="form-control" value="********">
+                                                <div class="input-group mb-3">
+                                                    <input type="password" name="password" class="form-control"
+                                                        placeholder="Password">
+                                                    <span class="input-group-text" id="basic-addon2"><i class='bx bx-hide'
+                                                            id="togglePassword"></i></span>
+                                                </div>
                                                 <small class="text-danger">leave blank if you do not want to update</small>
                                             </div>
                                         </div>
@@ -222,6 +233,20 @@
     </div>
     @push('scripts')
         <script>
+            $("#togglePassword").click(function(e) {
+                e.preventDefault();
+                const passwordField = $(this).closest('.input-group').find('input');
+                const icon = $(this);
+
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                    icon.removeClass('bx-hide').addClass('bx-show');
+                } else {
+                    passwordField.attr('type', 'password');
+                    icon.removeClass('bx-show').addClass('bx-hide');
+                }
+            })
+
             document.addEventListener('DOMContentLoaded', function() {
                 const form = document.getElementById('disable2faForm');
                 if (!form) return;

@@ -30,6 +30,24 @@ class FarmerController extends Controller
             return $next($request);
         });
     }
+
+    // show Farmer details
+    public function show($id)
+    {
+        $farmer = User::with([
+            'district',
+            'landDetail',
+            'cropDetail',
+            'bankDetail',
+            'documents',
+            'residentialDetail',
+            // 'residentialDetail.division',
+            // 'residentialDetail.district',
+            // 'residentialDetail.block',
+        ])->findOrFail($id);
+        return view('account.farmer.show', compact('farmer'));
+    }
+
     /* =========================
         STEP 1 – BASIC DETAILS
     ========================== */

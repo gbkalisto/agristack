@@ -5,6 +5,7 @@ use App\Http\Controllers\Account\AuthController;
 use App\Http\Controllers\Account\DashboardController;
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Account\FarmerController;
+use App\Http\Controllers\Account\AccountController;
 
 // Guest (not logged in)
 Route::middleware('guest:account')->group(function () {
@@ -32,10 +33,14 @@ Route::middleware(['auth:account', 'account'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::any('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('profile', [ProfileController::class, 'showProfile'])->name('profile');
+    Route::post('/profile/{id}', [ProfileController::class, 'updateProfile'])->name('profile.update');
+
+    Route::get('/below/accounts', [AccountController::class, 'index'])->name('below.accounts');
 
     // Farmer Routes
     Route::prefix('farmers')->name('farmers.')->group(function () {
         // LIST
+        Route::get('/{id}/show', [FarmerController::class, 'show'])->name('show');
         Route::get('/', [FarmerController::class, 'index'])
             ->name('index');
         // STEP 1
