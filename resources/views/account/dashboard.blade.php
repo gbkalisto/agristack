@@ -45,7 +45,7 @@
             </div>
         @endif
 
-        @if ($role == 'district_admin' || $role == 'division_admin')
+        @if ($role == 'district_admin' || $role == 'division_admin' || $role == 'admin')
             <div class="col">
                 <div class="card radius-10 border-start border-0 border-4 border-danger">
                     <a href="{{ route('account.below.accounts') }}">

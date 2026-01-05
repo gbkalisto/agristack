@@ -109,7 +109,7 @@
                                               </li>
                                               <li>
                                                   <a href="{{ route('admin.admins.index') }}">
-                                                      <i class="bx bx-radio-circle"></i>Admins
+                                                      <i class="bx bx-radio-circle"></i>Super Admins
                                                   </a>
                                               </li>
 

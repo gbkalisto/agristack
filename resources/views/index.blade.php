@@ -14,6 +14,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -71,7 +73,7 @@
                             @enderror
                         </div>
 
-                        <div class="mb-2">
+                        {{-- <div class="mb-2">
                             <input type="password" name="password" id="password"
                                 class="form-control  @error('password') is-invalid @enderror"
                                 placeholder="Enter password" autocomplete="off" required>
@@ -79,7 +81,23 @@
                             @error('password')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
+                        </div> --}}
+                        <div class="mb-2">
+                            <div class="input-group">
+                                <input type="password" name="password" id="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    placeholder="Enter password" autocomplete="off" required>
+
+                                <span class="input-group-text" style="cursor:pointer" onclick="togglePassword()">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                </span>
+                            </div>
+
+                            @error('password')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
+
 
                         <a href="#" class="small text-success d-block mb-3">Forgot Password?</a>
 
@@ -117,6 +135,20 @@
     <!-- ===== JS ===== -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
     <script>
+        function togglePassword() {
+            const password = document.getElementById("password");
+            const icon = document.getElementById("togglePasswordIcon");
+
+            if (password.type === "password") {
+                password.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                password.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        }
         window.APP = {
             captchaUrl: "{{ route('captcha') }}",
             loginRoutes: {
@@ -127,9 +159,9 @@
     </script>
 
     <script src="{{ asset('/theme/js/main.js') }}">
-        <script src = "https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        < script src = "https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
         crossorigin = "anonymous"
-        referrerpolicy = "no-referrer">
+        referrerpolicy = "no-referrer" >
     </script>
 
 </body>

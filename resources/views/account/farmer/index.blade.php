@@ -56,9 +56,11 @@
                                     <th scope="col">Category</th>
                                     <th scope="col">DOB</th>
                                     <th scope="col">District</th>
-                                    {{-- @if ($checkRole == 'black_admin') --}}
+                                    @if ($checkRole != 'block_admin')
+                                        <th scope="col">Filled By</th>
+                                    @endif
                                     <th scope="col">Options</th>
-                                    {{-- @endif --}}
+
 
                                 </tr>
                             </thead>
@@ -72,6 +74,9 @@
                                         <td>{{ ucfirst($farmer->category) }}</td>
                                         <td>{{ ucfirst($farmer->dob) }}</td>
                                         <td>{{ ucfirst($farmer->district->name ?? '-') }}</td>
+                                        @if ($checkRole != 'block_admin')
+                                            <td>{{ ucfirst($farmer->filledByAdmin->name ?? 'Self') }}</td>
+                                        @endif
 
                                         <td>
                                             <a href="{{ route('account.farmers.show', $farmer->id) }}"

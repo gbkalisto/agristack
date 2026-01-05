@@ -35,7 +35,10 @@ class DashboardController extends Controller
             $accounts->where('district_id', $this->account->district_id);
         } elseif ($this->role == 'division_admin') {
             $accounts->where('division_id', $this->account->division_id);
+        } else {
+            $accounts = AdminUser::query();
         }
+        $accounts->where('id', '!=', $this->account->id);
 
         $accountsCount = $accounts->count();
         $accounts = $accounts->get();
