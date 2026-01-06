@@ -3,6 +3,20 @@
          <nav class="navbar navbar-expand gap-3">
              <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
              </div>
+             <!-- Organization Info -->
+             <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center me-auto">
+                 <h6 class="mb-0 fw-bold text-dark">
+                     Radhe Krishna Enterprises
+                 </h6>
+
+                 <small class="text-muted">
+                     (Sahaj Shulabh Balram Seva Samiti – SSBSS)
+                 </small>
+
+                 <span class="badge bg-light text-dark border ms-lg-3 mt-1 mt-lg-0">
+                     GST: <strong>09ABJAS8830M1ZO</strong>
+                 </span>
+             </div>
 
 
              <div class="top-menu ms-auto">
@@ -29,8 +43,7 @@
                          <img src="{{ asset('storage/' . auth('admin')->user()->profile_picture) }}" class="user-img"
                              alt="user avatar">
                      @else
-                         <img src="{{ asset('theme') }}/images/avatars/avatar-2.png" class="user-img"
-                             alt="user avatar">
+                         <img src="{{ asset('theme') }}/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
                      @endif
                      <div class="user-info">
                          <p class="user-name mb-0">{{ auth('admin')->user()->name }}</p>
@@ -41,7 +54,8 @@
                      <li><a class="dropdown-item d-flex align-items-center" href="{{ route('admin.profile') }}"><i
                                  class="bx bx-user fs-5"></i><span>Profile</span></a>
                      </li>
-                     <li><a class="dropdown-item d-flex align-items-center" href="{{ route('admin.settings.index') }}"><i
+                     <li><a class="dropdown-item d-flex align-items-center"
+                             href="{{ route('admin.settings.index') }}"><i
                                  class="bx bx-cog fs-5"></i><span>Settings</span></a>
                      </li>
                      <li><a class="dropdown-item d-flex align-items-center" href="{{ route('admin.dashboard') }}"><i
