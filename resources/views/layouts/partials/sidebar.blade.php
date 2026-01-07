@@ -33,6 +33,13 @@
                                               <div class="menu-title">Dashboard</div>
                                           </a>
                                       </li>
+                                      <li>
+                                          <a href="{{ route('registry.index') }}">
+                                              <div class="parent-icon"><i class="bx bx-message-square-edit"></i>
+                                              </div>
+                                              <div class="menu-title">Farmer registry</div>
+                                          </a>
+                                      </li>
 
                                   </ul>
                                   <!--end navigation-->

@@ -151,6 +151,20 @@
                 </div>
             </div>
 
+            <div class="row mb-4">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Password</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    <div class="input-group mb-3">
+                        <input type="password" name="password" class="form-control" placeholder="Password">
+                        <span class="input-group-text" id="basic-addon2"><i class='bx bx-hide'
+                                id="togglePassword"></i></span>
+                    </div>
+                    <small class="text-danger">leave blank if you do not want to update</small>
+                </div>
+            </div>
+
             <div class="text-end">
                 <button class="btn btn-success px-4">
                     Update & Continue
@@ -160,3 +174,20 @@
         </div>
     </div>
 </form>
+@push('scripts')
+    <script>
+        $("#togglePassword").click(function(e) {
+            e.preventDefault();
+            const passwordField = $(this).closest('.input-group').find('input');
+            const icon = $(this);
+
+            if (passwordField.attr('type') === 'password') {
+                passwordField.attr('type', 'text');
+                icon.removeClass('bx-hide').addClass('bx-show');
+            } else {
+                passwordField.attr('type', 'password');
+                icon.removeClass('bx-show').addClass('bx-hide');
+            }
+        })
+    </script>
+@endpush

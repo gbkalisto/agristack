@@ -6,6 +6,7 @@ use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\BlockController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RegistryController;
 
 
 Route::get('/', function () {
@@ -14,7 +15,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/registry', [RegistryController::class, 'index'])->name('registry.index');
+    Route::get('/registry/step/{step}', [RegistryController::class, 'step'])->name('registry.step');
+    Route::post('/registry/step/{step}', [RegistryController::class, 'store'])->name('registry.store');
+});
 
 // Route::middleware('otp.pending')->group(function () {
 //     Route::get('otp', [LoginController::class, 'otpForm'])->name('web.otp');

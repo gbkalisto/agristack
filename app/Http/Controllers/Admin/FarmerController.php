@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Division;
+use Illuminate\Support\Facades\Hash;
 
 class FarmerController extends Controller
 {
@@ -309,9 +310,10 @@ class FarmerController extends Controller
         $request->validate([
             'name' => 'required',
             'district_id' => 'required|exists:districts,id',
+            'password' => 'nullable|min:8',
         ]);
 
-        $farmer->update($request->only([
+        $data = $request->only([
             'name',
             'email',
             'father_name',
@@ -320,7 +322,12 @@ class FarmerController extends Controller
             'category',
             'address',
             'district_id'
-        ]));
+        ]);
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+        $farmer->update($data);
         return redirect()->route('admin.farmers.edit.residential', $farmer->id);
     }
 

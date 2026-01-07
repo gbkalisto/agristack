@@ -4,6 +4,21 @@
              <div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
              </div>
 
+             <!-- Organization Info -->
+             <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center me-auto">
+                 <h6 class="mb-0 fw-bold text-dark">
+                     Radhe Krishna Enterprises
+                 </h6>
+
+                 <small class="text-muted">
+                     (Sahaj Shulabh Balram Seva Samiti – SSBSS)
+                 </small>
+
+                 <span class="badge bg-light text-dark border ms-lg-3 mt-1 mt-lg-0">
+                     GST: <strong>09ABJAS8830M1ZO</strong>
+                 </span>
+             </div>
+
 
              <div class="top-menu ms-auto">
                  <ul class="navbar-nav align-items-center gap-1">
@@ -36,8 +51,8 @@
                      </div>
                  </a>
                  <ul class="dropdown-menu dropdown-menu-end">
-                     <li><a class="dropdown-item d-flex align-items-center" href="#"><i
-                                 class="bx bx-user fs-5"></i><span>Profile</span></a>
+                     <li><a class="dropdown-item d-flex align-items-center" href="{{ route('home') }}"><i
+                                 class="bx bx-user fs-5"></i><span>Dashboard</span></a>
                      </li>
 
 
