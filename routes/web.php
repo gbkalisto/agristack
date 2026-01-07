@@ -20,6 +20,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/registry', [RegistryController::class, 'index'])->name('registry.index');
     Route::get('/registry/step/{step}', [RegistryController::class, 'step'])->name('registry.step');
     Route::post('/registry/step/{step}', [RegistryController::class, 'store'])->name('registry.store');
+
+    Route::post('/registry/basics', [RegistryController::class, 'basicDetail'])->name('basic.store');
+    Route::post('/registry/residential', [RegistryController::class, 'residentialDetail'])->name('residential.store');
+    Route::post('/registry/land', [RegistryController::class, 'landDetail'])->name('land.store');
+    Route::post('/registry/crop', [RegistryController::class, 'cropDetail'])->name('crop.store');
+    Route::post('/registry/bank', [RegistryController::class, 'bankDetail'])->name('bank.store');
+    Route::post('/registry/documents', [RegistryController::class, 'documentsDetail'])->name('documents.store');
 });
 
 // Route::middleware('otp.pending')->group(function () {

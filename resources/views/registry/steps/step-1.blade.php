@@ -8,117 +8,124 @@
             <div class="card-header fw-bold">
                 Step 1 of 6 – Basic Details
             </div>
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('basic.store') }}">
                 @csrf
-                @method('PUT')
-
                 <div class="card">
                     <div class="card-body p-4">
 
-                        {{-- <h6 class="fw-bold text-primary mb-3">Edit Basic Details </h6> --}}
 
-                        {{-- $user Name --}}
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 $user Name <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" name="name"
-                                    class="form-control @error('name') is-invalid @enderror" placeholder="Enter $user name"
-                                    value="{{ old('name', $user->name) }}">
+                                <input type="text" name="name" value="{{ old('name', optional($user)->name) }}"
+                                    class="form-control @error('name') is-invalid @enderror">
                                 @error('name')
-                                    <small class="text-danger">{{ $message }}</small>
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Father Name --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Father / Husband Name
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" name="father_name" class="form-control"
-                                    placeholder="Father / Husband name"
-                                    value="{{ old('father_name', $user->father_name) }}">
+                                <input type="text" name="father_name"
+                                    value="{{ old('father_name', optional($user)->father_name) }}"
+                                    class="form-control @error('father_name') is-invalid @enderror">
+                                @error('father_name')
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
+                                @enderror
                             </div>
                         </div>
 
-                        {{-- Mobile --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Mobile Number <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" name="mobile"
-                                    class="form-control @error('mobile') is-invalid @enderror"
-                                    placeholder="10 digit mobile number" value="{{ old('mobile', $user->phone) }}">
-                                @error('mobile')
-                                    <small class="text-danger">{{ $message }}</small>
+                                <input type="text" name="phone" value="{{ old('phone', optional($user)->phone) }}"
+                                    class="form-control @error('mobile') is-invalid @enderror">
+                                @error('phone')
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Email --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Email
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" name="email"
-                                    class="form-control @error('email') is-invalid @enderror" placeholder="Email address"
-                                    value="{{ old('email', $user->email) }}">
+                                <input type="email" name="email" value="{{ old('email', optional($user)->email) }}"
+                                    class="form-control @error('email') is-invalid @enderror">
                                 @error('email')
-                                    <small class="text-danger">{{ $message }}</small>
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
                                 @enderror
                             </div>
                         </div>
 
-                        {{-- Aadhaar --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Aadhaar Number
                             </label>
                             <div class="col-sm-9">
-                                <input type="text" name="aadhaar" class="form-control" placeholder="12 digit Aadhaar"
-                                    value="{{ old('aadhaar', $user->aadhaar) }}">
+                                <input type="text" name="aadhaar" value="{{ old('aadhaar', optional($user)->aadhaar) }}"
+                                    class="form-control @error('aadhaar') is-invalid @enderror">
+                                @error('aadhaar')
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
+                                @enderror
                             </div>
                         </div>
 
-                        {{-- DOB --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Date of Birth
                             </label>
                             <div class="col-sm-9">
-                                <input type="date" name="dob" class="form-control"
-                                    value="{{ old('dob', $user->dob) }}">
+                                <input type="date" name="dob" value="{{ old('dob', optional($user)->dob) }}"
+                                    class="form-control @error('dob') is-invalid @enderror">
+                                @error('dob')
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
+                                @enderror
                             </div>
                         </div>
 
-                        {{-- Gender --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Gender
                             </label>
                             <div class="col-sm-9">
-                                <select name="gender" class="form-control">
-                                    <option value="">-- Select Gender --</option>
-                                    <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>
+                                <select name="gender" class="form-control @error('gender') is-invalid @enderror">
+                                    <option value="">-- Select --</option>
+                                    <option value="male"
+                                        {{ old('gender', optional($user)->gender) == 'male' ? 'selected' : '' }}>
                                         Male
                                     </option>
                                     <option value="female"
-                                        {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>
+                                        {{ old('gender', optional($user)->gender) == 'female' ? 'selected' : '' }}>
                                         Female
                                     </option>
                                     <option value="other"
-                                        {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>Other
+                                        {{ old('gender', optional($user)->other) == 'rainfed' ? 'selected' : '' }}>
+                                        Other
                                     </option>
                                 </select>
+                                @error('gender')
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
+                                @enderror
                             </div>
                         </div>
 
-                        {{-- Category --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Category
@@ -127,32 +134,36 @@
                                 <select name="category" class="form-control">
                                     <option value="">-- Select Category --</option>
                                     <option value="SC"
-                                        {{ old('category', $user->category) == 'SC' ? 'selected' : '' }}>SC
+                                        {{ old('category', optional($user)->category) == 'SC' ? 'selected' : '' }}>SC
                                     </option>
                                     <option value="ST"
-                                        {{ old('category', $user->category) == 'ST' ? 'selected' : '' }}>ST
+                                        {{ old('category', optional($user)->category) == 'ST' ? 'selected' : '' }}>ST
                                     </option>
                                     <option value="OBC"
-                                        {{ old('category', $user->category) == 'OBC' ? 'selected' : '' }}>OBC
+                                        {{ old('category', optional($user)->category) == 'OBC' ? 'selected' : '' }}>OBC
                                     </option>
                                     <option value="General"
-                                        {{ old('category', $user->category) == 'General' ? 'selected' : '' }}>General
+                                        {{ old('category', optional($user)->category) == 'General' ? 'selected' : '' }}>
+                                        General
                                     </option>
                                 </select>
+                                @error('category')
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
+                                @enderror
                             </div>
                         </div>
 
-                        {{-- Address --}}
+
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 Full Address
                             </label>
                             <div class="col-sm-9">
-                                <textarea name="address" rows="2" class="form-control" placeholder="Complete address">{{ old('address', $user->address) }}</textarea>
+                                <textarea name="address" rows="2" class="form-control" placeholder="Complete address">{{ old('address', optional($user)->address) }}</textarea>
                             </div>
                         </div>
 
-                        {{-- District --}}
+
                         <div class="row mb-4">
                             <label class="col-sm-3 col-form-label">
                                 District <span class="text-danger">*</span>
@@ -162,7 +173,7 @@
                                     <option value="">-- Select District --</option>
                                     @foreach ($districts as $district)
                                         <option value="{{ $district->id }}"
-                                            {{ old('district_id', $user->district_id) == $district->id ? 'selected' : '' }}>
+                                            {{ old('district_id', optional($user)->district_id) == $district->id ? 'selected' : '' }}>
                                             {{ ucfirst($district->name) }}
                                         </option>
                                     @endforeach
@@ -181,7 +192,6 @@
                     </div>
                 </div>
             </form>
-            {{-- </div> --}}
         </div>
     </div>
 @endsection

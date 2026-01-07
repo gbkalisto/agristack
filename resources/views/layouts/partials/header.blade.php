@@ -41,9 +41,8 @@
                      href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 
                      @if (Auth::user()->profile_picture)
-                         <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" class="user-img"
-                         {{-- alt="user avatar"> {{ Auth::user()->name }} --}} @else <img src="{{ asset('theme') }}/images/avatars/avatar-2.png"
-                             class="user-img" alt="user avatar">
+                     <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" class="user-img" @else <img
+                             src="{{ asset('theme') }}/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
                      @endif
                      <div class="user-info">
                          <p class="user-name mb-0">{{ Auth::user()->name }}</p>
