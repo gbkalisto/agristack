@@ -9,11 +9,16 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegistryController;
 
 
+
 Route::get('/', function () {
     return view('index');
 })->name('index');
 
-Auth::routes();
+// Auth::routes();
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
