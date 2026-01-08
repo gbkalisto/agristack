@@ -113,7 +113,8 @@
 
                         {{-- <button class="btn btn-main w-100 mt-2" onClick="handleLogin()">Log In</button> --}}
                         <button type="submit" id="submitBtn"class="btn btn-main w-100 mt-2">Log In</button>
-                        <a href="" id="createBtn" class="btn create-btn w-100 mt-3 d-none">Create New User
+                        <a href="{{ route('register') }}" id="createBtn"
+                            class="btn create-btn w-100 mt-3 d-none">Create New User
                             Account</a>
                     </form>
                 </div>
@@ -149,9 +150,9 @@
     </script>
 
     <script src="{{ asset('/theme/js/main.js') }}">
-        <script src = "https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        < script src = "https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
         crossorigin = "anonymous"
-        referrerpolicy = "no-referrer">
+        referrerpolicy = "no-referrer" >
     </script>
 
 </body>

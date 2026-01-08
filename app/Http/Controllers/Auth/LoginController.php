@@ -26,6 +26,7 @@ class LoginController extends Controller
         return view('index');
     }
 
+
     /**
      * Handle login (PHONE + PASSWORD)
      */

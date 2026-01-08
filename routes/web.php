@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\BlockController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegistryController;
+use App\Http\Controllers\RegistrationController;
 
 
 
@@ -17,6 +18,8 @@ Route::get('/', function () {
 // Auth::routes();
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/registration', [RegistrationController::class, 'index'])->name('register');
+Route::post('/registration', [RegistrationController::class, 'register'])->name('registration');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
