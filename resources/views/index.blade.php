@@ -72,16 +72,6 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
-
-                        {{-- <div class="mb-2">
-                            <input type="password" name="password" id="password"
-                                class="form-control  @error('password') is-invalid @enderror"
-                                placeholder="Enter password" autocomplete="off" required>
-                            <div class="invalid-feedback"></div>
-                            @error('password')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div> --}}
                         <div class="mb-2">
                             <div class="input-group">
                                 <input type="password" name="password" id="password"
@@ -159,9 +149,9 @@
     </script>
 
     <script src="{{ asset('/theme/js/main.js') }}">
-        < script src = "https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
         crossorigin = "anonymous"
-        referrerpolicy = "no-referrer" >
+        referrerpolicy = "no-referrer">
     </script>
 
 </body>
