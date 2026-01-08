@@ -1,85 +1,3 @@
-{{-- <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-</head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
-</body>
-</html> --}}
-
-
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <html lang="en">
 
@@ -110,6 +28,7 @@
     <link rel="stylesheet" href="{{ asset('theme') }}/css/header-colors.css">
     <link rel="theme-link" href="https://codervent.com/rocker/demo/vertical/index.html">
     <link href="{{ asset('theme') }}/plugins/fancy-file-uploader/fancy_fileupload.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css" />
     <title>{{ config('app.name', 'Agitstack') }}</title>
     <style>
         .btn i {
@@ -183,6 +102,7 @@
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.fileupload.js"></script>
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.iframe-transport.js"></script>
     <script src="{{ asset('theme') }}/plugins/fancy-file-uploader/jquery.fancy-fileupload.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script>
         // new PerfectScrollbar(".app-container")
     </script>
@@ -205,6 +125,58 @@
     }) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.
 </script>
 <script src='{{ asset('theme') }}/signals/js/clients/scc-c2/scc-c2.min.js'></script>
+
+<script>
+    @if (session('success'))
+        iziToast.success({
+            title: 'Success',
+            message: "{{ session('success') }}",
+            position: 'topRight',
+            timeout: 3000
+        });
+    @endif
+
+    @if (session('error'))
+        iziToast.error({
+            title: 'Error',
+            message: "{{ session('error') }}",
+            position: 'topRight',
+            timeout: 3000
+        });
+    @endif
+
+    @if (session('warning'))
+        iziToast.warning({
+            title: 'Warning',
+            message: "{{ session('warning') }}",
+            position: 'topRight',
+            timeout: 3000
+        });
+    @endif
+
+    @if (session('info'))
+        iziToast.info({
+            title: 'Info',
+            message: "{{ session('info') }}",
+            position: 'topRight',
+            timeout: 3000
+        });
+    @endif
+</script>
+
+@if ($errors->any())
+    <script>
+        @foreach ($errors->all() as $error)
+            iziToast.error({
+                title: 'Validation Error',
+                message: "{{ $error }}",
+                position: 'topRight'
+            });
+        @endforeach
+    </script>
+@endif
+
+
 
 
 @stack('scripts')

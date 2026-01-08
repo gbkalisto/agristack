@@ -18,20 +18,30 @@
                      GST: <strong>09ABJAS8830M1ZO</strong>
                  </span>
              </div>
+             <form method="POST" action="{{ route('logout') }}" style="margin:0px">
+                 @csrf
+                 <button type="submit" class="btn btn-danger btn-sm">
+                     <i class="bx bx-log-out-circle fs-5 me-2"></i>
+                     <span>Logout</span>
+                 </button>
+             </form>
 
 
              <div class="top-menu ms-auto">
                  <ul class="navbar-nav align-items-center gap-1">
                      <li class="nav-item mobile-search-icon d-flex d-lg-none" data-bs-toggle="modal"
                          data-bs-target="#SearchModal">
-                         <a class="nav-link" href="avascript:;"><i class='bx bx-search'></i>
-                         </a>
+                         {{-- <a class="nav-link" href="avascript:;"><i class='bx bx-search'></i>
+                         </a> --}}
                      </li>
+
 
                      <li class="nav-item dark-mode d-none d-sm-flex">
                          <a class="nav-link dark-mode-icon" href="javascript:;"><i class='bx bx-moon'></i>
                          </a>
                      </li>
+
+
 
                  </ul>
              </div>
@@ -46,7 +56,6 @@
                      @endif
                      <div class="user-info">
                          <p class="user-name mb-0">{{ Auth::user()->name }}</p>
-                         {{-- <p class="designattion mb-0">{{ ucwords(auth('admin')->user()->getRoleNames()->first()) }}</p> --}}
                      </div>
                  </a>
                  <ul class="dropdown-menu dropdown-menu-end">

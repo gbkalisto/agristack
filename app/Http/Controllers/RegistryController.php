@@ -63,9 +63,7 @@ class RegistryController extends Controller
         // Detect edit mode (query param OR completed profile)
         $isEditMode = request()->query('edit_step') !== null || $currentStep === null;
 
-        /* -------------------------------------------------
-       STEP ACCESS CONTROL
-    ------------------------------------------------- */
+
 
         // Normal flow: prevent skipping steps
         if (!$isEditMode && $currentStep !== null && $step > $currentStep) {
@@ -77,9 +75,7 @@ class RegistryController extends Controller
             abort(404);
         }
 
-        /* -------------------------------------------------
-       LOAD USER DATA
-    ------------------------------------------------- */
+
         $user = auth()->user()->load([
             'district',
             'landDetail',
@@ -143,14 +139,10 @@ class RegistryController extends Controller
             'district_id' => 'required|exists:districts,id',
         ]);
 
-        /* --------------------------------
-       INSERT / UPDATE USER
-    -------------------------------- */
+
         $user->update($validated);
 
-        /* --------------------------------
-       REDIRECT TO NEXT STEP
-    -------------------------------- */
+
         return redirect('/registry/step/2')
             ->with('success', 'Basic details saved successfully.');
     }
@@ -230,7 +222,7 @@ class RegistryController extends Controller
                 'season'    => $request->season
             ]
         );
-        return redirect('/registry/step/5')->with('success', 'Land details saved successfully.');
+        return redirect('/registry/step/5')->with('success', 'Crop details saved successfully.');
     }
 
     public function bankDetail(Request $request)
@@ -304,7 +296,7 @@ class RegistryController extends Controller
 
         $farmer->update([
             'is_profile_completed' => 1,
-            'profile_picture'=> $doc->photo//  photo need to update her
+            'profile_picture' => $doc->photo //  photo need to update her
         ]);
         return redirect()->route('home')->with('success', 'Profile completed successfully.');
     }
