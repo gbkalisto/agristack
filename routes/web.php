@@ -34,7 +34,6 @@ Route::middleware(['auth'])->group(function () {
 //     Route::any('send-otp', [LoginController::class, 'sendOtp'])->name('otp.send');
 //     Route::post('otp', [LoginController::class, 'verifyOtp'])->name('otp.verify');
 // });
-
 Route::get('/captcha', [CaptchaController::class, 'generate'])->name('captcha');
 Route::get('districtsby/{divisionId}', [DistrictController::class, 'getDistrictsByDivision']);
 Route::get('blocksby/{districtId}', [BlockController::class, 'getBlocksByDistrict']);
