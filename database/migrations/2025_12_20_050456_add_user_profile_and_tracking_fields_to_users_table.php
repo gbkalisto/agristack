@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->uuid('uuid')->unique()->after('id');
             $table->string('father_name')->nullable()->after('name');
             $table->string('aadhaar', 12)
                 ->unique()
@@ -65,6 +66,7 @@ return new class extends Migration
                 $table->dropForeign(['filled_by_admin_user_id']);
 
                 $table->dropColumn([
+                    'uuid',
                     'father_name',
                     'aadhaar',
                     'dob',
