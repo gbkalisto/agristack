@@ -11,10 +11,13 @@ use App\Http\Controllers\RegistrationController;
 
 
 
-Route::get('/', function () {
-    return view('index');
-})->name('index');
-
+// Route::get('/', function () {
+//     return view('index');
+// })->name('index');
+Route::get('/', [LoginController::class, 'loginAsOfficial'])->name('loginas.official');
+Route::get('/login/as/farmer', [LoginController::class, 'loginAsFarmer'])->name('loginas.farmer');
+Route::get('/farmer/otp', [LoginController::class, 'otpForm'])->name('farmer.otp.form');
+Route::post('/farmer/otp', [LoginController::class, 'verifyOtp'])->name('farmer.otp.verify');
 // Auth::routes();
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -37,11 +40,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/registry/documents', [RegistryController::class, 'documentsDetail'])->name('documents.store');
 });
 
-// Route::middleware('otp.pending')->group(function () {
-//     Route::get('otp', [LoginController::class, 'otpForm'])->name('web.otp');
-//     Route::any('send-otp', [LoginController::class, 'sendOtp'])->name('otp.send');
-//     Route::post('otp', [LoginController::class, 'verifyOtp'])->name('otp.verify');
-// });
 Route::get('/captcha', [CaptchaController::class, 'generate'])->name('captcha');
 Route::get('districtsby/{divisionId}', [DistrictController::class, 'getDistrictsByDivision']);
 Route::get('blocksby/{districtId}', [BlockController::class, 'getBlocksByDistrict']);

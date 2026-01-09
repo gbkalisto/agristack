@@ -31,55 +31,47 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        /* ---------------- VALIDATION ---------------- */
         $request->validate([
             'username' => 'required',
             'password' => 'required',
             'captcha'  => 'required|string',
         ]);
 
-        /* ---------------- CAPTCHA CHECK ---------------- */
+
         if ($request->captcha !== session('captcha')) {
-            return response()->json([
-                'status' => false,
-                'errors' => [
-                    'captcha' => ['Invalid Captcha']
-                ]
-            ], 422);
+            return back()
+                ->withErrors(['captcha' => 'Invalid Captcha'])
+                ->withInput();
         }
 
         session()->forget('captcha');
 
-        /* ---------------- IDENTIFIER ---------------- */
+
         $loginField = filter_var($request->username, FILTER_VALIDATE_EMAIL)
             ? 'email'
             : 'user_name';
 
-        /* ---------------- USER FETCH ---------------- */
         $user = AdminUser::where($loginField, $request->username)
             ->where('status', 1)
             ->first();
 
+
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status' => false,
-                'errors' => [
-                    'username' => ['Invalid credentials']
-                ]
-            ], 422);
+            return back()
+                ->withErrors(['username' => 'Invalid credentials'])
+                ->withInput();
         }
 
-        /* ---------------- OTP SESSION CONTEXT ---------------- */
         session([
             'otp_pending' => true,
             'otp_guard'   => 'account',
             'otp_user_id' => $user->id,
         ]);
 
-        return response()->json([
-            'status'   => true,
-            'redirect' => route('account.otp.form'), // OTP page
-        ]);
+        return redirect()->route('account.otp.form');
     }
+
 
     // send otp on registed number
     public function sendOtp(Request $request)

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -18,12 +20,22 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
+    public function loginAsOfficial()
+    {
+        return view('home.loginasofficial');
+    }
+
+    public function loginAsFarmer()
+    {
+        return view('home.loginasfarmer');
+    }
+
     /**
      * Show login form
      */
     public function showLoginForm()
     {
-        return view('index');
+        return view('home.loginasofficial');
     }
 
 
@@ -39,34 +51,89 @@ class LoginController extends Controller
             'captcha'  => ['required'],
         ]);
 
-        if ($request->captcha !== Session::get('captcha')) {
-            throw ValidationException::withMessages([
-                'captcha' => 'Invalid captcha',
-            ]);
+        if ($request->captcha !== session('captcha')) {
+            return back()->withErrors([
+                'captcha' => 'Invalid captcha'
+            ])->withInput();
         }
 
-        Session::forget('captcha');
+        session()->forget('captcha');
 
-        /* ---------------- AUTH ATTEMPT ---------------- */
-        if (!Auth::attempt([
-            'phone' => $request->phone,
-            'password' => $request->password,
-        ], $request->boolean('remember'))) {
+        /* ---------------- USER CHECK ---------------- */
+        $user = User::where('phone', $request->phone)->first();
 
-            throw ValidationException::withMessages([
-                'phone' => 'Invalid phone or password',
-            ]);
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'phone' => 'Invalid phone or password'
+            ])->withInput();
         }
 
-        /* ---------------- SUCCESS ---------------- */
-        $request->session()->regenerate();
+        /* ---------------- GENERATE OTP ---------------- */
+        // $otp = rand(100000, 999999);
+        $otp = 100000;
 
-        return response()->json([
-            'status'   => true,
-            'message'  => 'Login successful',
-            'redirect' => url($this->redirectTo),
+        // Save OTP (DB or session)
+        $user->update([
+            'otp_code'       => Hash::make($otp),
+            'otp_expires_at' => now()->addMinutes(5),
+            'otp_verified'   => false,
         ]);
+
+        session([
+            'otp_user_id' => $user->id
+        ]);
+
+        // TODO: Send OTP via SMS API here
+        // sendOtp($user->phone, $otp);
+
+        return redirect()->route('farmer.otp.form');
     }
+
+
+    public function otpForm()
+    {
+        if (!session('otp_user_id')) {
+            return redirect()->route('loginas.farmer');
+        }
+
+        return view('home.otp');
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|digits:6'
+        ]);
+
+        $user = User::find(session('otp_user_id'));
+
+        if (! $user) {
+            return redirect()->route('loginas.farmer');
+        }
+
+        /* -------- OTP Expiry Check -------- */
+        if (now()->gt($user->otp_expires_at)) {
+            return back()->withErrors(['otp' => 'OTP expired. Please login again.']);
+        }
+
+        /* -------- OTP Match Check -------- */
+        if (! Hash::check($request->otp, $user->otp_code)) {
+            return back()->withErrors(['otp' => 'Invalid OTP']);
+        }
+
+        /* -------- OTP Verified -------- */
+        $user->update([
+            'otp_verified' => true,
+            'otp_code' => null,
+            'otp_expires_at' => null
+        ]);
+
+        session()->forget('otp_user_id');
+
+        Auth::login($user);
+        return redirect($this->redirectTo);
+    }
+
 
     /**
      * Logout
@@ -78,6 +145,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('loginas.farmer');
     }
 }
