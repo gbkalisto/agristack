@@ -75,10 +75,10 @@
                         <div class="text-center mb-3">
                             <strong class="fs-5">Log In as</strong><br>
                             <div class="d-flex justify-content-center gap-2 mt-3">
-                                <a href="{{ route('loginas.official') }}" id="officialBtn"
-                                    class="role-btn" style="text-decoration: none">Official</a>
-                                <a href="{{ route('loginas.farmer') }}" id="farmerBtn"
-                                    class="role-btn active" style="text-decoration: none">Farmer</a>
+                                <a href="{{ route('loginas.official') }}" id="officialBtn" class="role-btn"
+                                    style="text-decoration: none">Official</a>
+                                <a href="{{ route('loginas.farmer') }}" id="farmerBtn" class="role-btn active"
+                                    style="text-decoration: none">Farmer</a>
                             </div>
                         </div>
 
@@ -141,8 +141,7 @@
                         <button type="submit" id="submitBtn" class="btn btn-main w-100 mt-2">
                             Continue
                         </button>
-
-                        <a href="{{ route('register') }}" id="createBtn" class="btn create-btn w-100 mt-3 d-none">
+                        <a href="{{ route('register') }}" id="createBtn" class="btn create-btn w-100 mt-3">
                             Create New User Account
                         </a>
                     </form>

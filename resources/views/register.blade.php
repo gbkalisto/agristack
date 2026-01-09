@@ -111,7 +111,13 @@
                         <button type="submit" id="submitBtn" class="btn btn-main w-100 mt-2">
                             Register
                         </button>
-                        <a href="/" class="small text-success d-block mb-3">Login</a>
+                        <!-- Already have account -->
+                        <div class="text-center mt-3">
+                            <span class="small text-muted">Already have an account?</span>
+                            <a href="{{ route('loginas.farmer') }}" class="small text-success fw-semibold ms-1">
+                                Login here
+                            </a>
+                        </div>
                     </form>
 
                 </div>
