@@ -28,6 +28,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/farmer/details/{uuid}', [RegistryController::class, 'showDetails'])->name('farmer.details');
     Route::get('/registry', [RegistryController::class, 'index'])->name('registry.index');
     Route::get('/registry/step/{step}', [RegistryController::class, 'step'])->name('registry.step');
     Route::post('/registry/step/{step}', [RegistryController::class, 'store'])->name('registry.store');

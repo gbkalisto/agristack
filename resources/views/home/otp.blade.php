@@ -85,13 +85,21 @@
                         <div class="mb-3">
                             <label class="form-label">Enter OTP</label>
                             <input type="text" name="otp" class="form-control @error('otp') is-invalid @enderror"
-                                placeholder="Enter 6 digit OTP" maxlength="6" >
+                                placeholder="Enter 6 digit OTP" maxlength="6">
 
                             @error('otp')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
+                        <!-- Resend OTP -->
+                        <div class="mb-3 text-end">
+                            <small>
+                                Didn’t receive OTP?
+                                <a href="#" class="text-primary">
+                                    Send again
+                                </a>
+                            </small>
+                        </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-main">
                                 Verify OTP

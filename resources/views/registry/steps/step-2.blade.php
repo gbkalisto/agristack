@@ -18,10 +18,10 @@
                 @csrf
 
                 <div class="card-body p-4">
-
+                    <h6 class="text-danger mb-3">Fields marked with an asterisk (*) are required.</h6>
                     {{-- Residential Type --}}
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Residential Type</label>
+                        <label class="col-sm-3 col-form-label">Residential Type <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <select name="residential_type"
                                 class="form-control @error('residential_type') is-invalid @enderror">
@@ -61,7 +61,7 @@
 
                     {{-- Division --}}
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Division</label>
+                        <label class="col-sm-3 col-form-label">Division <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <select name="division_id" id="division_id"
                                 class="form-control @error('division_id') is-invalid @enderror">
@@ -81,7 +81,7 @@
 
                     {{-- District --}}
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">District</label>
+                        <label class="col-sm-3 col-form-label">District <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <select name="district_id" id="district_id"
                                 class="form-control @error('district_id') is-invalid @enderror">
@@ -95,7 +95,7 @@
 
                     {{-- Block --}}
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Block</label>
+                        <label class="col-sm-3 col-form-label">Block <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <select name="block_id" id="block_id"
                                 class="form-control @error('block_id') is-invalid @enderror">
@@ -109,7 +109,7 @@
 
                     {{-- Village --}}
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Village</label>
+                        <label class="col-sm-3 col-form-label">Village <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="village"
                                 value="{{ old('village', optional($residential)->village) }}"

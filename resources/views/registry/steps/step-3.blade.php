@@ -19,11 +19,11 @@
 
             <div class="card-body p-4">
 
-                {{-- <h6 class="text-primary fw-bold mb-3">Land Details</h6> --}}
+                <h6 class="text-danger mb-3">Fields marked with an asterisk (*) are required.</h6>
 
                 {{-- Khata Number --}}
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Khata Number</label>
+                    <label class="col-sm-3 col-form-label">Khata Number <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="khata_number"
                             value="{{ old('khata_number', optional($land)->khata_number) }}"
@@ -36,7 +36,7 @@
 
                 {{-- Plot Numbers --}}
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Plot Number(s)</label>
+                    <label class="col-sm-3 col-form-label">Plot Number(s) <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="plot_numbers"
                             value="{{ old('plot_numbers', optional($land)->plot_numbers) }}"
@@ -49,7 +49,7 @@
 
                 {{-- Total Land --}}
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Total Land (Acres)</label>
+                    <label class="col-sm-3 col-form-label">Total Land (Acres) <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <input type="number" step="0.01" name="total_land"
                             value="{{ old('total_land', optional($land)->total_land) }}"
@@ -62,7 +62,7 @@
 
                 {{-- Irrigation Source --}}
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Irrigation Source</label>
+                    <label class="col-sm-3 col-form-label">Irrigation Source <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <select name="irrigation_source"
                             class="form-control @error('irrigation_source') is-invalid @enderror">

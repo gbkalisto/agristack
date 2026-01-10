@@ -12,8 +12,7 @@
                 @csrf
                 <div class="card">
                     <div class="card-body p-4">
-
-
+                        <h6 class="text-danger mb-3">Fields marked with an asterisk (*) are required.</h6>
                         <div class="row mb-3">
                             <label class="col-sm-3 col-form-label">
                                 $user Name <span class="text-danger">*</span>

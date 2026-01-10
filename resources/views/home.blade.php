@@ -127,8 +127,8 @@
 
                             {{-- FINAL ACTION --}}
                             <div class="mt-4 text-center">
-                                <a href="#" class="btn btn-success px-5">
-                                    Print
+                                <a href="{{ route('farmer.details', $user->uuid) }}" class="btn btn-success px-5">
+                                    View All Details
                                 </a>
                             </div>
                         @else

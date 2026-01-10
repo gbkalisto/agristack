@@ -19,11 +19,11 @@
 
             <div class="card-body p-4">
 
-                <h6 class="text-primary fw-bold mb-3">Bank Details</h6>
+                <h6 class="text-danger mb-3">Fields marked with an asterisk (*) are required.</h6>
 
                 {{-- Bank Name --}}
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Bank Name</label>
+                    <label class="col-sm-3 col-form-label">Bank Name <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="bank_name"
                             value="{{ old('bank_name', optional($bank)->bank_name) }}"
@@ -36,7 +36,7 @@
 
                 {{-- Account Holder Name --}}
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Account Holder Name</label>
+                    <label class="col-sm-3 col-form-label">Account Holder Name <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="account_holder_name"
                             value="{{ old('account_holder_name', optional($bank)->account_holder_name) }}"
@@ -49,7 +49,7 @@
 
                 {{-- Account Number --}}
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Account Number</label>
+                    <label class="col-sm-3 col-form-label">Account Number <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="account_number"
                             value="{{ old('account_number', optional($bank)->account_number) }}"
@@ -62,7 +62,7 @@
 
                 {{-- IFSC Code --}}
                 <div class="row mb-4">
-                    <label class="col-sm-3 col-form-label">IFSC Code</label>
+                    <label class="col-sm-3 col-form-label">IFSC Code <span class="text-danger">*</span></label>
                     <div class="col-sm-9">
                         <input type="text" name="ifsc_code"
                             value="{{ old('ifsc_code', optional($bank)->ifsc_code) }}"

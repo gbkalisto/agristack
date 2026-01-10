@@ -19,11 +19,11 @@
 
                 <div class="card-body p-4">
 
-                    {{-- <h6 class="text-primary fw-bold mb-3">Crop Information</h6> --}}
+                    <h6 class="text-danger mb-3">Fields marked with an asterisk (*) are required.</h6>
 
                     {{-- Main Crop --}}
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Main Crop</label>
+                        <label class="col-sm-3 col-form-label">Main Crop <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="main_crop"
                                 value="{{ old('main_crop', optional($crop)->main_crop) }}"
@@ -36,7 +36,7 @@
 
                     {{-- Secondary Crop --}}
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Secondary Crop</label>
+                        <label class="col-sm-3 col-form-label">Secondary Crop <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <input type="text" name="secondary_crop"
                                 value="{{ old('secondary_crop', optional($crop)->secondary_crop) }}"
@@ -49,7 +49,7 @@
 
                     {{-- Season --}}
                     <div class="row mb-4">
-                        <label class="col-sm-3 col-form-label">Season</label>
+                        <label class="col-sm-3 col-form-label">Season <span class="text-danger">*</span></label>
                         <div class="col-sm-9">
                             <select name="season" class="form-control @error('season') is-invalid @enderror">
                                 <option value="">-- Select --</option>

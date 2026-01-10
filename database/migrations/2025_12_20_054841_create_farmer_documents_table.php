@@ -14,7 +14,7 @@ return new class extends Migration {
                 ->constrained('users')
                 ->cascadeOnDelete();
 
-            $table->string('aadhaar_file');
+            $table->string('aadhaar_file')->nullable();
             $table->string('land_papers')->nullable();
             $table->string('bank_passbook')->nullable();
             $table->string('photo')->nullable();

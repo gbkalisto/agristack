@@ -300,4 +300,25 @@ class RegistryController extends Controller
         ]);
         return redirect()->route('home')->with('success', 'Profile completed successfully.');
     }
+
+    public function showDetails($uuid)
+    {
+        // echo $uuid;
+        $query = User::where('uuid', $uuid);
+        if (!$query->exists()) {
+            return redirect()->route('home')->with('error', 'Data not found');
+        }
+        $farmer = $query->with([
+            'district',
+            'landDetail',
+            'cropDetail',
+            'bankDetail',
+            'documents',
+            'residentialDetail',
+            'residentialDetail.division',
+            'residentialDetail.district',
+            'residentialDetail.block',
+        ])->first();
+        return view('registry.alldetails', compact('farmer'));
+    }
 }

@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Division;
 use Illuminate\Support\Facades\Hash;
+use App\Exports\FarmersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FarmerController extends Controller
 {
@@ -537,5 +539,10 @@ class FarmerController extends Controller
         return redirect()
             ->route('admin.farmers.index')
             ->with('success', 'Farmer deleted successfully.');
+    }
+
+    public function exportAllFarmers()
+    {
+        return Excel::download(new FarmersExport, 'farmers_data.xlsx');
     }
 }

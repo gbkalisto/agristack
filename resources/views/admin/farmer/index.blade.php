@@ -24,7 +24,7 @@
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div class="d-flex gap-2">
                             <a href="{{ route('admin.farmers.create') }}" class="btn btn-primary">Add Farmer</a>
-                            <a href="#" class="btn btn-primary">Export</a>
+                            <a href="{{ route('admin.farmers.export') }}" class="btn btn-primary">Export</a>
                         </div>
                         <!-- Search Form -->
                         <form method="GET" class="d-flex" role="search">
