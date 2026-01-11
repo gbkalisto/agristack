@@ -99,6 +99,7 @@ class AdminAccountController extends Controller
             'division_id' => $request->division_id,
             'district_id' => $request->district_id,
             'block_id'    => $request->block_id,
+            'status'      => $request->has('status') ? 1 : 0,
         ]);
 
         return redirect()->route('admin.accounts.index')->with('success', 'Admin Account created successfully.');
@@ -153,6 +154,7 @@ class AdminAccountController extends Controller
             'district_id' => $request->district_id,
             'block_id'    => $request->block_id,
             'password'    => $request->password ? Hash::make($request->password) : $account->password,
+            'status'      => $request->has('status') ? 1 : 0,
         ]);
 
         return redirect()->route('admin.accounts.index')->with('success', 'Admin Account updated successfully.');

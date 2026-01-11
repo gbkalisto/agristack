@@ -53,43 +53,50 @@ class FarmerController extends Controller
     ========================== */
     public function index(Request $request)
     {
-        $farmers = User::query();
+        // Base query
+        $farmersQuery = User::with(['district', 'residentialDetail']);
 
-        /* ---------------------------------
-       Role-based restriction
-        ----------------------------------*/
+        // ================= ROLE FILTER =================
         if ($this->role === 'block_admin') {
-            $farmers->where('filled_by_admin_user_id', $this->account->id);
-        }
 
-        /* ---------------------------------
-        Search filter
-        (?search=...)
-        ----------------------------------*/
+            $farmersQuery->where('filled_by_admin_user_id', $this->account->id);
+        } elseif ($this->role === 'division_admin') {
+
+            $farmersQuery->whereHas('residentialDetail', function ($q) {
+                $q->where('division_id', $this->account->division_id);
+            });
+        } elseif ($this->role === 'district_admin') {   // ✅ fixed typo
+
+            $farmersQuery->whereHas('residentialDetail', function ($q) {
+                $q->where('district_id', $this->account->district_id);
+            });
+        }
+        // admin → no filter (see all farmers)
+
+        // ================= SEARCH FILTER =================
         if ($request->filled('search')) {
             $search = $request->search;
 
-            $farmers->where(function ($q) use ($search) {
+            $farmersQuery->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('father_name', 'like', "%{$search}%")
                     ->orWhere('phone', 'like', "%{$search}%")
                     ->orWhere('aadhaar', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
-                    // 🔥 District relation search
                     ->orWhereHas('district', function ($dq) use ($search) {
                         $dq->where('name', 'like', "%{$search}%");
                     });
             });
         }
+
+        // ================= PAGINATION =================
+        $farmers = $farmersQuery->paginate(15)->withQueryString();
+
         $role = $this->role;
-        $farmers = $farmers
-            ->with('district')
-            ->latest()
-            ->paginate(15)
-            ->withQueryString(); // keep search on pagination
 
         return view('account.farmer.index', compact('farmers', 'role'));
     }
+
 
 
     public function create()

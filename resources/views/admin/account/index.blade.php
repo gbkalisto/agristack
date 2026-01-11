@@ -47,6 +47,7 @@
                                     <th scope="col">Division</th>
                                     <th scope="col">District</th>
                                     <th scope="col">Block</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col">Options</th>
                                 </tr>
                             </thead>
@@ -74,6 +75,7 @@
                                         <td>{{ ucfirst($account->division->name ?? '-') }}</td>
                                         <td>{{ ucfirst($account->district->name ?? '-') }}</td>
                                         <td>{{ ucfirst($account->block->name ?? '-') }}</td>
+                                        <td><span class="badge bg-{{ $account->status == '1' ? 'success' : 'danger' }}">{{ $account->status == '1' ? 'Active' : 'Inactive' }}</span></td>
 
                                         <td>
                                             <a href="{{ route('admin.accounts.edit', $account->id) }}"

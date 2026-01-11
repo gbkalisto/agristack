@@ -104,10 +104,10 @@
                                             <i class="bx bx-phone"></i>
                                         </span>
                                         <input type="tel" name="mobile"
-                                            class="form-control @error('mobile') is-invalid @enderror" value="{{ old('mobile') }}"
-                                            pattern="[0-9]{10}"
-                                                    maxlength="10" placeholder="Enter 10-digit mobile number"
-                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                            class="form-control @error('mobile') is-invalid @enderror"
+                                            value="{{ old('mobile') }}" pattern="[0-9]{10}" maxlength="10"
+                                            placeholder="Enter 10-digit mobile number"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                     </div>
                                     @error('mobile')
                                         <div class="text-danger mt-1"><small>{{ $message }}</small></div>
@@ -196,6 +196,18 @@
                                 </div>
 
                             </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Status</label>
+                                <div class="col-sm-9 d-flex align-items-center">
+                                    <input type="checkbox" name="status" id="status" value="1" checked>
+                                    <label for="status" class="ms-2 mb-0">Active</label>
+                                </div>
+
+                                @error('status')
+                                    <div class="text-danger mt-1"><small>{{ $message }}</small></div>
+                                @enderror
+                            </div>
+
 
                             {{-- Submit --}}
                             <div class="row">
