@@ -52,14 +52,32 @@ class AuthController extends Controller
             ? 'email'
             : 'user_name';
 
-        $user = AdminUser::where($loginField, $request->username)
-            ->where('status', 1)
-            ->first();
-
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        // $user = AdminUser::where($loginField, $request->username)
+        //     ->where('status', 1)
+        //     ->first();
+        $user = AdminUser::where($loginField, $request->username)->first();
+        if (! $user) {
             return back()
                 ->withErrors(['username' => 'Invalid credentials'])
+                ->withInput();
+        }
+
+
+        // if (! $user || ! Hash::check($request->password, $user->password)) {
+        //     return back()
+        //         ->withErrors(['username' => 'Invalid credentials'])
+        //         ->withInput();
+        // }
+
+        if (! Hash::check($request->password, $user->password)) {
+            return back()
+                ->withErrors(['username' => 'Invalid credentials'])
+                ->withInput();
+        }
+
+        if ($user->status == 0) {
+            return back()
+                ->withErrors(['username' => 'Your account is inactive. Please contact admin.'])
                 ->withInput();
         }
 
