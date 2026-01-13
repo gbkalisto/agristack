@@ -32,7 +32,7 @@ class Fast2SmsService
             'route'            => $this->route,
             'sender_id'       => $this->senderId,
             'message'         => $templateId,
-            'variables_values' => $variablesValues,
+            'variables_values'=> $variablesValues,
             'numbers'         => $mobile,
             'flash'           => 0
         ]);
