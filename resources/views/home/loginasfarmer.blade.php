@@ -22,7 +22,7 @@
 
     <!-- ===== TOP NAV ===== -->
     <div class="top-nav">
-        {{-- <img src="{{ asset('/') }}img/niclogo.png" alt="NIC Logo" class="nic-logo-img"> --}}
+        <img src="{{ asset('/') }}img/niclogo.png" alt="NIC Logo" class="nic-logo-img">
         <a href="#">Dashboard</a>
         <a href="#">Check Enrollment Status</a>
         <a href="#">Login with CSC</a>
@@ -35,15 +35,14 @@
             <!-- LEFT CONTENT -->
             <div class="col-lg-6 col-md-7 text-center text-md-start mb-4 mb-md-0 px-5">
                 <h1 class="fw-bold display-5">
-                    {{-- <img src="{{ asset('/') }}img/agristacklogo.png" alt="Logo"
-                        style="width:50%; height:50%; object-fit:contain;"> --}}
+                    <img src="{{ asset('/') }}img/agristacklogo.png" alt="Logo"
+                        style="width:50%; height:50%; object-fit:contain;">
                     </h1>
-                {{-- <h3 class="fw-semibold">Uttar Pradesh Farmer Registry</h3> --}}
-                <h3 class="fw-semibold">Sahaj Shulabh Balram Seva Samiti</h3>
-                {{-- <p class="mt-3 w-75">
+                <h3 class="fw-semibold">Uttar Pradesh Farmer Registry</h3>
+                <p class="mt-3 w-75">
                     <center>Farmer Registry has been started as an important initiative for the farmers in the state of
                         Uttar Pradesh. Under this system, a unique farmer ID (Farmer ID) will be created for each
-                        farmer.HELPDESK 0522 2317003</center> --}}
+                        farmer.HELPDESK 0522 2317003</center>
                 </p>
             </div>
 
@@ -71,8 +70,8 @@
                         @csrf
 
                         <div class="text-center mb-3">
-                            {{-- <img src="{{ asset('/') }}img/uplogo.png" alt="Logo"
-                                style="width:120px; height:120px; object-fit:contain;"> --}}
+                            <img src="{{ asset('/') }}img/uplogo.png" alt="Logo"
+                                style="width:120px; height:120px; object-fit:contain;">
                         </div>
 
                         <div class="text-center mb-3">
