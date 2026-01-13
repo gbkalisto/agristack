@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Services\Fast2SmsService;
 
 class AuthController extends Controller
 {
+    protected $smsService;
+
+    public function __construct(Fast2SmsService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
 
     public function stepForm()
     {
@@ -123,6 +130,7 @@ class AuthController extends Controller
         /* ---------------- GENERATE OTP ---------------- */
         //$otp = rand(100000, 999999);
         $otp = 100000; // For testing purpose
+        $response = $this->smsService->sendOtp($request->phone, $otp);
 
         $user->update([
             'otp' => Hash::make($otp),

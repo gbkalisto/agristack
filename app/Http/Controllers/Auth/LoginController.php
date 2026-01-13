@@ -14,11 +14,13 @@ use App\Services\Fast2SmsService;
 class LoginController extends Controller
 {
     protected $redirectTo = '/home';
+    protected $smsService;
 
-    public function __construct()
+    public function __construct(Fast2SmsService $smsService)
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+        $this->smsService = $smsService;
     }
 
     public function loginAsOfficial()
@@ -74,9 +76,8 @@ class LoginController extends Controller
 
 
         // $otp = rand(100000, 999999);
-        $smsService = new Fast2SmsService;
         $otp = 100000;
-        return $smsService->sendOtp($request->mobile, $otp);
+        $response = $this->smsService->sendOtp($request->phone, $otp);
 
         // Save OTP (DB or session)
         $user->update([
