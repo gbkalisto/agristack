@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\BlockController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegistryController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\OtpController;
 
 
 
@@ -25,6 +26,11 @@ Route::get('/registration', [RegistrationController::class, 'index'])->name('reg
 Route::post('/registration', [RegistrationController::class, 'register'])->name('registration');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+
+Route::get('/send-otp', [OtpController::class, 'sendOtp']);
+
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
