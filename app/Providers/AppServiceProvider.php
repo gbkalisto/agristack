@@ -25,9 +25,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (Schema::hasTable('admin_settings')) {
-            $settings = AdminSetting::pluck('value', 'key')->toArray();
-            View::share('settings', $settings);
+        // if (Schema::hasTable('admin_settings')) {
+        //     $settings = AdminSetting::pluck('value', 'key')->toArray();
+        //     View::share('settings', $settings);
+        // }
+        try {
+            if (Schema::hasTable('admin_settings')) {
+                $settings = AdminSetting::pluck('value', 'key')->toArray();
+                View::share('settings', $settings);
+            }
+        } catch (\Exception $e) {
+            // Ignore DB errors during first load / migration
         }
         Gate::define('create-farmer', function ($admin) {
             return $admin->role === 'block_admin';
