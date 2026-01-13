@@ -39,9 +39,9 @@ return [
         'secret_key' => env('RECAPTCHA_SECRET_KEY'),
     ],
     'fast2sms' => [
-        'api_key'   => env('FAST2SMS_API_KEY'),
-        'sender_id' => env('FAST2SMS_SENDER_ID', 'FSTSMS'),
-        'route'     => env('FAST2SMS_ROUTE', 'otp'),
+        'api_key'     => env('FAST2SMS_API_KEY'),
+        'sender_id'   => env('FAST2SMS_SENDER_ID'),
+        'template_id' => env('FAST2SMS_TEMPLATE_ID'),
     ],
 
 

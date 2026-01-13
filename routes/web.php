@@ -28,7 +28,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::get('/send-otp', [OtpController::class, 'sendOtp']);
+Route::get('/send-sms', [OtpController::class, 'sendOtp']);
 
 
 

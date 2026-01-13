@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Services\Fast2SmsService;
 
 class LoginController extends Controller
 {
@@ -70,7 +71,12 @@ class LoginController extends Controller
 
         /* ---------------- GENERATE OTP ---------------- */
         // $otp = rand(100000, 999999);
+
+
+        // $otp = rand(100000, 999999);
+        $smsService = new Fast2SmsService;
         $otp = 100000;
+        return $smsService->sendOtp($request->mobile, $otp);
 
         // Save OTP (DB or session)
         $user->update([

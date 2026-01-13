@@ -2,41 +2,51 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
-
 class Fast2SmsService
 {
     protected $apiKey;
     protected $senderId;
-    protected $route;
+    protected $templateId;
 
     public function __construct()
     {
-        $this->apiKey   = config('services.fast2sms.api_key');
-        $this->senderId = config('services.fast2sms.sender_id');
-        $this->route    = 'dlt';
+        $this->apiKey      = config('services.fast2sms.api_key');
+        $this->senderId   = config('services.fast2sms.sender_id');
+        $this->templateId = config('services.fast2sms.template_id');
     }
 
-    /**
-     * Send DLT SMS
-     */
-    public function sendSms($mobile, $templateId, $variables = [])
+    public function sendOtp($mobile, $otp)
     {
-        // Convert array to pipe separated string
-        $variablesValues = implode('|', $variables);
+        $dateTime = now()->format('d-m-Y h:i A');
+        $minutes  = 5;
 
-        $response = Http::withHeaders([
-            'authorization' => $this->apiKey,
-            'accept'        => 'application/json'
-        ])->get('https://www.fast2sms.com/dev/bulkV2', [
-            'route'            => $this->route,
-            'sender_id'       => $this->senderId,
-            'message'         => $templateId,
-            'variables_values'=> $variablesValues,
-            'numbers'         => $mobile,
-            'flash'           => 0
+        $variables = implode('|', [
+            $otp,
+            $dateTime,
+            $minutes
         ]);
 
-        return $response->json();
+        $url = "https://www.fast2sms.com/dev/bulkV2?" . http_build_query([
+            'authorization'    => $this->apiKey,
+            'route'            => 'dlt',
+            'sender_id'        => $this->senderId,
+            'message'          => $this->templateId,
+            'variables_values' => $variables,
+            'flash'            => 0,
+            'numbers'          => $mobile
+        ]);
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return json_decode($response, true);
     }
 }
