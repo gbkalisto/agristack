@@ -38,8 +38,8 @@
                     Mobile Number <span class="text-danger">*</span>
                 </label>
                 <div class="col-sm-9">
-                    <input type="text" name="mobile" class="form-control @error('mobile') is-invalid @enderror"
-                        placeholder="10 digit mobile number" value="{{ old('mobile', $farmer->phone) }}">
+                    <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+                        placeholder="10 digit mobile number" value="{{ old('phone', $farmer->phone) }}">
                     @error('mobile')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror

@@ -19,6 +19,7 @@ use App\Models\Division;
 use Illuminate\Support\Facades\Hash;
 use App\Exports\FarmersExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\Rule;
 
 class FarmerController extends Controller
 {
@@ -313,11 +314,17 @@ class FarmerController extends Controller
             'name' => 'required',
             'district_id' => 'required|exists:districts,id',
             'password' => 'nullable|min:8',
+            // unique phone but ignore current farmer
+            'phone' => [
+                'required',
+                Rule::unique('users', 'phone')->ignore($farmer->id),
+            ],
         ]);
 
         $data = $request->only([
             'name',
             'email',
+            'phone',
             'father_name',
             'dob',
             'gender',
