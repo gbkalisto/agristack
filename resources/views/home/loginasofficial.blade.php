@@ -22,7 +22,7 @@
 
     <!-- ===== TOP NAV ===== -->
     <div class="top-nav">
-        {{-- <img src="img/niclogo.png" alt="NIC Logo" class="nic-logo-img"> --}}
+        <img src="img/niclogo.png" alt="NIC Logo" class="nic-logo-img">
         <a href="#">Dashboard</a>
         <a href="#">Check Enrollment Status</a>
         <a href="#">Login with CSC</a>
