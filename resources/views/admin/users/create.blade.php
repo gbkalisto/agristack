@@ -141,8 +141,8 @@
                                 <label class="col-sm-3 col-form-label"></label>
                                 <div class="col-sm-9">
                                     <div class="form-check">
-                                        <input class="form-check-input" name="is_active" type="checkbox" value="1"
-                                            id="input54" {{ old('is_active', true) ? 'checked' : '' }}>
+                                        <input class="form-check-input" name="status" type="checkbox" value="1"
+                                            id="input54" {{ old('status', true) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="input54">Active the user</label>
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
 
 
                             {{-- Roles Checkbox Group --}}
-                            <div class="row mb-3">
+                            {{-- <div class="row mb-3">
                                 <label for="input52" class="col-sm-3 col-form-label">Roles <span
                                         class="text-danger">*</span></label>
                                 <div class="col-sm-9">
@@ -166,12 +166,12 @@
                                         @endforeach
                                     </div>
 
-                                    {{-- Show error --}}
+
                                     @error('roles')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
+                            </div> --}}
 
 
                             {{-- Submit Buttons --}}

@@ -51,8 +51,8 @@ class UserController extends Controller
             'phone' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_active' => 'sometimes|boolean',
-            'roles' => 'required',
+            'status' => 'sometimes|boolean',
+            // 'roles' => 'required',
             // 'roles' => 'required|array',
             // 'roles.*' => 'exists:roles,name',
         ]);
@@ -71,11 +71,11 @@ class UserController extends Controller
         }
 
         // Set default value if is_active is not provided
-        $validatedData['is_active'] = $request->has('is_active') ? 1 : 0;
+        $validatedData['status'] = $request->has('status') ? 1 : 0;
 
         // Create the admin user
         $admin = Admin::create($validatedData);
-        $admin->syncRoles($request->roles);
+        // $admin->syncRoles($request->roles);
         return redirect()->route('admin.admins.index')->with('success', 'Admin user created successfully.');
     }
 
@@ -96,9 +96,9 @@ class UserController extends Controller
             'address' => 'nullable|string',
             'password' => 'nullable|min:8',
             'profile_picture' => 'nullable|image|max:2048',
-            'is_active' => 'sometimes|boolean',
-            'roles' => 'required|array',
-            'roles.*' => 'exists:roles,name'
+            'status' => 'sometimes|boolean',
+            // 'roles' => 'required|array',
+            // 'roles.*' => 'exists:roles,name'
 
         ]);
 
@@ -114,10 +114,10 @@ class UserController extends Controller
             $admin->profile_picture = $request->file('profile_picture')->storeAs('admins', $filename, 'public');
         }
 
-        $admin->is_active = $request->has('is_active') ? 1 : 0;
+        $admin->status = $request->has('status') ? 1 : 0;
         $admin->save();
         // Sync roles
-        $admin->syncRoles($request->roles);
+        // $admin->syncRoles($request->roles);
         return redirect()->route('admin.admins.index')->with('success', 'Admin updated successfully.');
     }
 
