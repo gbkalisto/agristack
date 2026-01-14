@@ -130,16 +130,13 @@ class AuthController extends Controller
         /* ---------------- GENERATE OTP ---------------- */
         $otp = rand(100000, 999999);
         // $otp = 100000; // For testing purpose
-        $response = $this->smsService->sendOtp($request->phone, $otp);
-
         $user->update([
             'otp' => Hash::make($otp),
             'otp_expires_at' => now()->addMinutes(5),
             'otp_verified' => false,
         ]);
-
         /* ---------------- SEND OTP (SMS API) ---------------- */
-        //$this->sendOtpSms($user->mobile, $otp);
+        $response = $this->smsService->sendOtp($request->mobile, $otp);
         return response()->json([
             'status' => true,
             'message' => 'OTP sent successfully'
@@ -219,20 +216,10 @@ class AuthController extends Controller
         ]);
     }
 
-
     public function logout()
     {
         Auth::guard('account')->logout();
         // return redirect()->route('account.login');
         return redirect()->to('/');
-    }
-
-    // Example function to send OTP via SMS API
-    protected function sendOtpSms($mobile, $otp)
-    {
-        Http::post('SMS_API_URL', [
-            'mobile' => $mobile,
-            'message' => "Your OTP is {$otp}. Valid for 5 minutes."
-        ]);
     }
 }
