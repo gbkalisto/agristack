@@ -75,8 +75,8 @@ class LoginController extends Controller
         // $otp = rand(100000, 999999);
 
 
-        // $otp = rand(100000, 999999);
-        $otp = 100000;
+        $otp = rand(100000, 999999);
+        // $otp = 100000;
         $response = $this->smsService->sendOtp($request->phone, $otp);
 
         // Save OTP (DB or session)

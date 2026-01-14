@@ -128,8 +128,8 @@ class AuthController extends Controller
         }
 
         /* ---------------- GENERATE OTP ---------------- */
-        //$otp = rand(100000, 999999);
-        $otp = 100000; // For testing purpose
+        $otp = rand(100000, 999999);
+        // $otp = 100000; // For testing purpose
         $response = $this->smsService->sendOtp($request->phone, $otp);
 
         $user->update([
